@@ -27,9 +27,12 @@ app.use("/api/auth", authRoutes);
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "HM Dance Studio Backend is running on render ",
+    message: "HM Dance Studio Backend is running boss",
   });
 });
+
+// server.js
+console.log("Auto Deploy Test");
 
 const PORT = process.env.PORT || 5000;
 
