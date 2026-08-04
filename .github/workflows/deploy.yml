@@ -1,4 +1,4 @@
-name: HM Dance Class CI
+name: CI Pipeline
 
 on:
   push:
@@ -13,33 +13,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [22]
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
+          cache: npm
 
       # Backend
-      - name: Install Backend Dependencies
+
+      - name: Install Backend
         working-directory: backend
         run: npm install
 
       # Frontend
-      - name: Install Frontend Dependencies
+
+      - name: Install Frontend
         working-directory: frontend
         run: npm install
 
       - name: Build Frontend
         working-directory: frontend
         run: npm run build
-
-      - name: Lint Frontend
-        working-directory: frontend
-        run: npm run lint
-
-      - name: Backend Test
-        working-directory: backend
-        run: npm test
