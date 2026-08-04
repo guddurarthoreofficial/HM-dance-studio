@@ -27,7 +27,7 @@ app.use("/api/auth", authRoutes);
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "HM Dance Studio Backend is running 🚀",
+    message: "HM Dance Studio Backend is running on render ",
   });
 });
 
