@@ -32,6 +32,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
+
       {/* Studio admin portal */}
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardHome />} />
@@ -39,6 +40,8 @@ function App() {
         <Route path="kanban" element={<KanbanBoard />} />
         <Route path="settings" element={<ThemeSettings />} />
       </Route>
+
+
 
       <Route path="*" element={<NotFound />} />
     </Routes>
