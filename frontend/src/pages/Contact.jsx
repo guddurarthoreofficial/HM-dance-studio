@@ -1,74 +1,79 @@
-import React from 'react';
+import { useState } from 'react'
+import './StaticPage.css'
+import './Contact.css'
 
-const Contact = () => {
+export default function Contact() {
+  const [sent, setSent] = useState(false)
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    setSent(true)
+  }
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-4xl font-bold text-center text-blue-600 mb-8">Contact Us</h1>
-
-      <p className="text-center text-gray-700 text-lg mb-12">
-        Have a question, need help with booking, or want to share feedback? We’d love to hear from you!
+    <div className="static-page container page-fade">
+      <p className="eyebrow">Get in touch</p>
+      <h1 className="static-page__title">Come, dance with us.</h1>
+      <div className="stroke-divider" style={{ maxWidth: 220 }} />
+      <p className="static-page__lead">
+        Questions about a class, a package, or booking the studio? Send a message, or call us directly.
       </p>
 
-      <div className="grid md:grid-cols-2 gap-10">
-        {/* Contact Form */}
-        <form className="bg-white rounded-lg shadow-md p-6 space-y-6">
+      <div className="contact-grid">
+        <div className="card contact-info">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Your Name</label>
-            <input
-              type="text"
-              placeholder="Enter your name"
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:border-blue-500"
-              required
-            />
+            <p className="eyebrow">Location</p>
+            <p className="contact-info__text">Chandmari Glomber, Near Hanuman Mandir, Motihari, Bihar</p>
           </div>
-
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Email Address</label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:border-blue-500"
-              required
-            />
+            <p className="eyebrow">Phone</p>
+            <p className="contact-info__text"><a href="tel:7488806350">7488806350</a></p>
+            <p className="contact-info__text"><a href="tel:9006002329">9006002329</a></p>
           </div>
-
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Message</label>
-            <textarea
-              rows="5"
-              placeholder="Your message..."
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
-          >
-            Send Message
-          </button>
-        </form>
-
-        {/* Contact Info */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">RideX Rentals</h2>
-          <p className="text-gray-600 mb-2">📍 Location: Ambala, Haryana, India</p>
-          <p className="text-gray-600 mb-2">📞 Phone: +91 98765 43210</p>
-          <p className="text-gray-600 mb-2">✉️ Email: support@ridexrentals.com</p>
-
-          <div className="mt-6">
-            <h3 className="text-lg font-medium text-gray-700 mb-2">Follow Us</h3>
-            <div className="flex gap-4 text-xl text-blue-600">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-            </div>
+            <p className="eyebrow">Classes</p>
+            <p className="contact-info__text">Hip Hop · Bollywood · Contemporary · Free Style · Wedding Choreography · Singing · Guitar</p>
           </div>
         </div>
+
+        <form className="card contact-form" onSubmit={handleSubmit}>
+          {sent ? (
+            <div className="contact-form__success">
+              <h3>Message sent.</h3>
+              <p>We'll call you back shortly — or ring us directly at 7488806350.</p>
+            </div>
+          ) : (
+            <>
+              <div>
+                <label htmlFor="name">Your name</label>
+                <input id="name" name="name" placeholder="Enter your full name" required />
+              </div>
+              <div>
+                <label htmlFor="phone">Phone number</label>
+                <input id="phone" name="phone" placeholder="10-digit mobile number" required />
+              </div>
+              <div>
+                <label htmlFor="interest">Interested in</label>
+                <select id="interest" name="interest" defaultValue="">
+                  <option value="" disabled>Select a class</option>
+                  <option>Hip Hop</option>
+                  <option>Bollywood</option>
+                  <option>Contemporary</option>
+                  <option>Free Style</option>
+                  <option>Wedding Choreography</option>
+                  <option>Singing Class</option>
+                  <option>Guitar Class</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="message">Message</label>
+                <textarea id="message" name="message" rows={4} placeholder="Tell us a little about what you're looking for" />
+              </div>
+              <button type="submit" className="btn btn-primary contact-form__submit">Send Message</button>
+            </>
+          )}
+        </form>
       </div>
     </div>
-  );
-};
-
-export default Contact;
+  )
+}

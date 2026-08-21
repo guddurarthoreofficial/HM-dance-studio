@@ -1,104 +1,69 @@
-import React from 'react';
-import { Typography, Box, Paper } from '@mui/material';
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell
-} from 'recharts';
+import './DashboardHome.css'
 
-// Sample user data
-const users = [
-  { name: 'Alice', gender: 'Female', marks: 85 },
-  { name: 'Alina', gender: 'Female', marks: 90 },
-  { name: 'Sita', gender: 'Female', marks: 20 },
-  { name: 'Bob', gender: 'Male', marks: 45 },
-  { name: 'Charlie', gender: 'Male', marks: 72 },
-  { name: 'Diana', gender: 'Female', marks: 59 },
-  { name: 'Eve', gender: 'Female', marks: 91 },
-  { name: 'Frank', gender: 'Male', marks: 38 },
-];
+const stats = [
+  { label: 'Active Students', value: '186', delta: '+12 this month', tone: 'gold' },
+  { label: 'Classes This Week', value: '24', delta: '5 styles running', tone: 'violet' },
+  { label: 'Revenue (MTD)', value: '₹3.4L', delta: '+18% vs last month', tone: 'gold' },
+  { label: 'Trial Requests', value: '9', delta: 'Awaiting follow-up', tone: 'magenta' },
+]
 
-// Data for bar chart
-const barData = [
-  {
-    category: 'Pass',
-    Male: users.filter(u => u.gender === 'Male' && u.marks >= 50).length,
-    Female: users.filter(u => u.gender === 'Female' && u.marks >= 50).length,
-  },
-  {
-    category: 'Fail',
-    Male: users.filter(u => u.gender === 'Male' && u.marks < 50).length,
-    Female: users.filter(u => u.gender === 'Female' && u.marks < 50).length,
-  },
-];
+const upcoming = [
+  { time: '5:00 PM', name: 'Hip Hop — Batch A', teacher: 'Coach Rahul' },
+  { time: '6:00 PM', name: 'Bollywood — Beginners', teacher: 'Coach Priya' },
+  { time: '7:15 PM', name: 'Guitar Class', teacher: 'Coach Aman' },
+  { time: '8:00 PM', name: 'Stunt Class', teacher: 'Coach Rahul' },
+]
 
-// Data for pie chart
-const pieData = [
-  { name: 'Pass', value: users.filter(u => u.marks >= 50).length },
-  { name: 'Fail', value: users.filter(u => u.marks < 50).length },
-];
+const activity = [
+  'New trial booked — Contemporary, by Aditi S.',
+  'Payment received — ₹1,999, Hip Hop monthly package.',
+  'Wedding choreography enquiry received.',
+  'Certificate issued — Bollywood, 3-month batch.',
+]
 
-const pieColors = ['#4caf50', '#f44336'];
-
-const DashboardHome = () => {
+export default function DashboardHome() {
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Welcome to the Admin Dashboard
-      </Typography>
+    <div>
+      <p className="eyebrow">Overview</p>
+      <h1 className="dash-home__title">Namaste, HM Studio 👋</h1>
+      <div className="stroke-divider" style={{ maxWidth: 160, margin: '8px 0 30px' }} />
 
-      {/* Chart Section */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          gap: 2,
-        }}
-      >
-        {/* Bar Chart Card */}
-        <Paper elevation={3} sx={{ width: '49%', height: 400, p: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Pass/Fail by Gender
-          </Typography>
-          <ResponsiveContainer width="100%" height="85%">
-            <BarChart data={barData}>
-              <XAxis dataKey="category" />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="Male" fill="#2196f3" />
-              <Bar dataKey="Female" fill="#e91e63" />
-            </BarChart>
-          </ResponsiveContainer>
-        </Paper>
+      <div className="dash-home__stats">
+        {stats.map((s) => (
+          <div className="card dash-home__stat" key={s.label}>
+            <p className="eyebrow">{s.label}</p>
+            <p className={`dash-home__stat-value tone-${s.tone}`}>{s.value}</p>
+            <p className="dash-home__stat-delta">{s.delta}</p>
+          </div>
+        ))}
+      </div>
 
-        {/* Pie Chart Card */}
-        <Paper elevation={3} sx={{ width: '49%', height: 400, p: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Total Pass vs Fail
-          </Typography>
-          <ResponsiveContainer width="100%" height="85%">
-            <PieChart>
-              <Pie
-                data={pieData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        </Paper>
-      </Box>
-    </Box>
-  );
-};
+      <div className="dash-home__grid">
+        <div className="card dash-home__panel">
+          <h3 className="dash-home__panel-title">Today's Schedule</h3>
+          <ul className="dash-home__list">
+            {upcoming.map((u) => (
+              <li key={u.name} className="dash-home__schedule-row">
+                <span className="dash-home__time">{u.time}</span>
+                <span className="dash-home__class-name">{u.name}</span>
+                <span className="dash-home__teacher">{u.teacher}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-export default DashboardHome;
+        <div className="card dash-home__panel">
+          <h3 className="dash-home__panel-title">Recent Activity</h3>
+          <ul className="dash-home__list">
+            {activity.map((a, i) => (
+              <li key={i} className="dash-home__activity-row">
+                <span className="dash-home__dot" />
+                {a}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}

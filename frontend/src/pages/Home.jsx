@@ -1,121 +1,110 @@
-import React, { useState } from 'react';
+import { Link } from 'react-router-dom'
+import './Home.css'
 
-const vehicles = [
-    {
-        id: 1,
-        name: 'Honda Activa 6G',
-        type: 'Bike',
-        price: 350,
-        image: 'https://images.pexels.com/photos/2549941/pexels-photo-2549941.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' // Source: BikeWale
-    },
-    {
-        id: 2,
-        name: 'Yamaha R15 V4',
-        type: 'Bike',
-        price: 800,
-        image: 'https://images.pexels.com/photos/2549941/pexels-photo-2549941.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' // Source: BikeWale
-    },
-    {
-        id: 3,
-        name: 'Hyundai i20 Sportz',
-        type: 'Car',
-        price: 1500,
-        image: 'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?cs=srgb&dl=car-vehicle-luxury-116675.jpg&fm=jpg' // Source: CarDekho
-    },
-    {
-        id: 4,
-        name: 'Maruti Swift Dzire',
-        type: 'Car',
-        price: 1200,
-        image: 'https://images.pexels.com/photos/2549941/pexels-photo-2549941.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' // Source: CarDekho
-    },
-    {
-        id: 3,
-        name: 'Hyundai i20 Sportz',
-        type: 'Car',
-        price: 1500,
-        image: 'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?cs=srgb&dl=car-vehicle-luxury-116675.jpg&fm=jpg' // Source: CarDekho
-    },
-    {
-        id: 3,
-        name: 'Hyundai i20 Sportz',
-        type: 'Car',
-        price: 1500,
-        image: 'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?cs=srgb&dl=car-vehicle-luxury-116675.jpg&fm=jpg' // Source: CarDekho
-    },
-    {
-        id: 3,
-        name: 'Hyundai i20 Sportz',
-        type: 'Car',
-        price: 1500,
-        image: 'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?cs=srgb&dl=car-vehicle-luxury-116675.jpg&fm=jpg' // Source: CarDekho
-    },
-];
+const styles = [
+  { name: 'Hip Hop', icon: '🕺' },
+  { name: 'Bollywood', icon: '🎬' },
+  { name: 'Contemporary', icon: '🤸' },
+  { name: 'Free Style', icon: '🧢' },
+  { name: 'Wedding Choreography', icon: '💃' },
+]
 
+const classes = [
+  {
+    name: 'Singing Class',
+    tag: 'Find your voice',
+    desc: 'Breath control, pitch, and stage confidence — express your soul, one note at a time.',
+  },
+  {
+    name: 'Guitar Class',
+    tag: 'Strum today, play forever',
+    desc: 'Chords to fingerstyle, taught from the ground up for absolute beginners and hobbyists.',
+  },
+  {
+    name: 'Dance Classes',
+    tag: 'Hip Hop · Bollywood · Contemporary',
+    desc: 'Technique-first training that builds toward real choreography and real performances.',
+  },
+  {
+    name: 'Stunt Class',
+    tag: 'Learn. Practice. Perform fearlessly.',
+    desc: 'Floor tricks, flips, and stage acrobatics taught with proper spotting and progressions.',
+  },
+]
 
-const Home = () => {
-    const [search, setSearch] = useState('');
-    const [filterType, setFilterType] = useState('All');
+export default function Home() {
+  return (
+    <div>
+      {/* HERO */}
+      <section className="hero">
+        <div className="hero__glow" aria-hidden="true" />
+        <div className="container hero__inner">
+          <p className="eyebrow">Motihari · Chandmari Glomber · Near Hanuman Mandir</p>
+          <h1 className="hero__title">
+            Dance nothing
+            <br />
+            without <span className="hero__title-accent">passion.</span>
+          </h1>
+          <div className="stroke-divider" style={{ maxWidth: 420 }} />
+          <p className="hero__sub">
+            HM Dance Studio trains dancers, singers, and guitarists of every level —
+            from your first step on the floor to your first show on stage.
+          </p>
 
-    const filteredVehicles = vehicles.filter(vehicle =>
-        (filterType === 'All' || vehicle.type === filterType) &&
-        vehicle.name.toLowerCase().includes(search.toLowerCase())
-    );
+          <div className="hero__actions">
+            <Link to="/register" className="btn btn-primary">Book a Free Trial</Link>
+            <Link to="/rentals" className="btn btn-ghost">See Classes &amp; Pricing</Link>
+          </div>
 
-    return (
-        <div className="p-6 max-w-6xl mx-auto">
-            <h1 className="text-3xl font-bold text-center mb-6">🚗 Car & 🏍️ Bike Rentals</h1>
-
-            {/* Search and Filter */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-center">
-                <input
-                    type="text"
-                    placeholder="Search by name..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="border px-4 py-2 rounded shadow-sm w-full sm:w-1/2"
-                />
-
-                <select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value)}
-                    className="border px-4 py-2 rounded shadow-sm w-full sm:w-1/4"
-                >
-                    <option value="All">All</option>
-                    <option value="Bike">Bike</option>
-                    <option value="Car">Car</option>
-                </select>
-            </div>
-
-            {/* Vehicle Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {filteredVehicles.map(vehicle => (
-                    <div key={vehicle.id} className="border rounded-lg p-4 shadow hover:shadow-lg transition">
-                        <img
-                            src={vehicle.image}
-                            alt={vehicle.name}
-                            className="w-full h-48 object-cover rounded"
-                        />
-                        <h2 className="text-xl font-semibold mt-2">{vehicle.name}</h2>
-                        <p className="text-gray-600">{vehicle.type}</p>
-                        <p className="mt-1 text-green-600 font-bold">₹{vehicle.price} / day</p>
-                        <div className="mt-3 flex gap-2">
-                            <button className="bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700">
-                                Rent Now
-                            </button>
-                            <button className="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700">
-                                Buy
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {filteredVehicles.length === 0 && (
-                <p className="text-center mt-6 text-gray-500">No vehicles found.</p>
-            )}
+          <div className="hero__offer">
+            <span className="tag tag-magenta">Offer</span>
+            <p className="hero__offer-text">
+              <strong>Admission free</strong> on package &nbsp;+&nbsp; <strong className="hero__offer-pct">25% OFF</strong>
+            </p>
+          </div>
         </div>
-    );
-};
+      </section>
 
-export default Home;
+      {/* STYLES STRIP */}
+      <section className="container styles-strip">
+        {styles.map((s) => (
+          <div className="styles-strip__item" key={s.name}>
+            <span className="styles-strip__icon">{s.icon}</span>
+            {s.name}
+          </div>
+        ))}
+      </section>
+
+      {/* CLASSES */}
+      <section className="container section">
+        <p className="eyebrow">What we teach</p>
+        <h2 className="section__title">Four ways to find your stage.</h2>
+        <div className="stroke-divider" style={{ maxWidth: 220, margin: '10px 0 34px' }} />
+
+        <div className="classes-grid">
+          {classes.map((c) => (
+            <div className="class-card card" key={c.name}>
+              <p className="class-card__tag">{c.tag}</p>
+              <h3 className="class-card__name">{c.name}</h3>
+              <p className="class-card__desc">{c.desc}</p>
+              <Link to="/contact" className="class-card__link">Enquire →</Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA BAND */}
+      <section className="container">
+        <div className="cta-band">
+          <div>
+            <h2 className="cta-band__title">Come, dance with us &amp;<br />discover the dancer in you.</h2>
+          </div>
+          <div className="cta-band__actions">
+            <a href="tel:7488806350" className="btn btn-primary">Call 7488806350</a>
+            <a href="tel:9006002329" className="btn btn-ghost">Call 9006002329</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

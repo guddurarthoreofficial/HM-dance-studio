@@ -1,55 +1,53 @@
-// src/components/Navbar.jsx
+import { useState } from 'react'
+import { NavLink, Link } from 'react-router-dom'
 
-import React from "react";
-import { Link } from "react-router-dom";
+const links = [
+  { to: '/', label: 'Home' },
+  { to: '/about', label: 'About' },
+  { to: '/rentals', label: 'Studio & Rentals' },
+  { to: '/contact', label: 'Contact' },
+]
 
-const Navbar = () => {
-  // Temporary login status
-  const isLoggedIn = false;
+export default function Navbar() {
+  const [open, setOpen] = useState(false)
 
   return (
-    <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-      {/* Logo */}
-      <div className="text-xl font-bold text-blue-600">
-        <Link to="/">RideX Rentals</Link>
-      </div>
-
-      {/* Navigation Links */}
-      <div className="space-x-6 text-gray-700 font-medium flex items-center">
-        <Link to="/" className="hover:text-blue-600 transition">
-          Home
+    <header className="navbar">
+      <div className="container navbar__inner">
+        <Link to="/" className="navbar__brand" onClick={() => setOpen(false)}>
+          <span className="navbar__brand-hm">HM</span>
+          <span className="navbar__brand-rest">DANCE STUDIO</span>
         </Link>
 
-        <Link to="/rentals" className="hover:text-blue-600 transition">
-          Rentals
-        </Link>
-
-        <Link to="/about" className="hover:text-blue-600 transition">
-          About
-        </Link>
-
-        <Link to="/contact" className="hover:text-blue-600 transition">
-          Contact
-        </Link>
-
-        {isLoggedIn ? (
-          <Link
-            to="/dashboard"
-            className="ml-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-          >
-            Dashboard
+        <nav className={`navbar__links ${open ? 'is-open' : ''}`}>
+          {links.map((l) => (
+            <NavLink
+              key={l.to}
+              to={l.to}
+              end={l.to === '/'}
+              className={({ isActive }) => `navbar__link ${isActive ? 'is-active' : ''}`}
+              onClick={() => setOpen(false)}
+            >
+              {l.label}
+            </NavLink>
+          ))}
+          <Link to="/login" className="btn btn-ghost navbar__login" onClick={() => setOpen(false)}>
+            Log In
           </Link>
-        ) : (
-          <Link
-            to="/login"
-            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-          >
-            Login
+          <Link to="/register" className="btn btn-primary navbar__cta" onClick={() => setOpen(false)}>
+            Join a Class
           </Link>
-        )}
-      </div>
-    </nav>
-  );
-};
+        </nav>
 
-export default Navbar;
+        <button
+          className="navbar__toggle"
+          aria-label="Toggle navigation menu"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span /><span /><span />
+        </button>
+      </div>
+    </header>
+  )
+}

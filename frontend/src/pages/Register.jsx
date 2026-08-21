@@ -1,113 +1,66 @@
-// src/pages/Register.jsx
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom'
+import './Auth.css'
 
-const Register = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
+export default function Register() {
+  const navigate = useNavigate()
 
-  const [errors, setErrors] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const validate = () => {
-    let tempErrors = {};
-    if (!formData.name.trim()) tempErrors.name = "Name is required";
-    if (!formData.email) {
-      tempErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      tempErrors.email = "Email is invalid";
-    }
-    if (!formData.password) {
-      tempErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      tempErrors.password = "Password must be at least 6 characters";
-    }
-    if (formData.password !== formData.confirmPassword) {
-      tempErrors.confirmPassword = "Passwords do not match";
-    }
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validate()) {
-      alert("Registration Successful!");
-      setFormData({ name: "", email: "", password: "", confirmPassword: "" });
-      setErrors({});
-    }
-  };
+  function handleSubmit(e) {
+    e.preventDefault()
+    navigate('/dashboard')
+  }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 border border-gray-200 rounded-lg shadow-md bg-white">
-      <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-      <form onSubmit={handleSubmit} noValidate className="space-y-4">
-        <div>
-          <label className="block font-semibold mb-1">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-        </div>
-        <div>
-          <label className="block font-semibold mb-1">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-        </div>
-        <div>
-          <label className="block font-semibold mb-1">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-        </div>
-        <div>
-          <label className="block font-semibold mb-1">Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border rounded"
-          />
-          {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Register
-        </button>
-        <p className="text-center text-sm mt-4">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
-            Login
-          </Link>
-        </p>
-      </form>
-    </div>
-  );
-};
+    <div className="auth page-fade">
+      <div className="auth__glow" aria-hidden="true" />
+      <div className="auth__card card auth__card--wide">
+        <Link to="/" className="navbar__brand" style={{ marginBottom: 26 }}>
+          <span className="navbar__brand-hm">HM</span>
+          <span className="navbar__brand-rest">DANCE STUDIO</span>
+        </Link>
 
-export default Register;
+        <span className="tag tag-magenta" style={{ marginBottom: 12 }}>Admission free · 25% off on package</span>
+        <h1 className="auth__title">Join a class.</h1>
+
+        <form onSubmit={handleSubmit} className="auth__form auth__form--grid">
+          <div>
+            <label htmlFor="name">Full name</label>
+            <input id="name" name="name" placeholder="Enter your name" required />
+          </div>
+          <div>
+            <label htmlFor="phone">Phone number</label>
+            <input id="phone" name="phone" placeholder="10-digit mobile number" required />
+          </div>
+          <div>
+            <label htmlFor="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="you@example.com" required />
+          </div>
+          <div>
+            <label htmlFor="style">Class interested in</label>
+            <select id="style" name="style" defaultValue="">
+              <option value="" disabled>Select a class</option>
+              <option>Hip Hop</option>
+              <option>Bollywood</option>
+              <option>Contemporary</option>
+              <option>Free Style</option>
+              <option>Wedding Choreography</option>
+              <option>Singing Class</option>
+              <option>Guitar Class</option>
+            </select>
+          </div>
+          <div style={{ gridColumn: '1 / -1' }}>
+            <label htmlFor="password">Create password</label>
+            <input id="password" type="password" name="password" placeholder="••••••••" required />
+          </div>
+          <button type="submit" className="btn btn-primary auth__submit" style={{ gridColumn: '1 / -1' }}>
+            Create Account
+          </button>
+        </form>
+
+        <p className="auth__switch">
+          Already training with us? <Link to="/login">Log in</Link>
+        </p>
+        <Link to="/" className="auth__back">← Back to site</Link>
+      </div>
+    </div>
+  )
+}

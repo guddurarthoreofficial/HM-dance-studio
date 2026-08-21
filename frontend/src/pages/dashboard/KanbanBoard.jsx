@@ -1,56 +1,94 @@
-import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useState } from 'react'
+import './KanbanBoard.css'
 
-const initialTasks = {
-  todo: ["Task 1", "Task 2"],
-  inProgress: ["Task 3"],
-  done: ["Task 4"]
-};
+const initialColumns = [
+  {
+    id: 'trial',
+    title: 'Trial Booked',
+    cards: [
+      { id: 'c1', name: 'Aditi Sharma', note: 'Contemporary · walked in Sat' },
+      { id: 'c2', name: 'Rohit Kumar', note: 'Hip Hop · referred by Coach Rahul' },
+    ],
+  },
+  {
+    id: 'enrolled',
+    title: 'Enrolled',
+    cards: [
+      { id: 'c3', name: 'Simran Kaur', note: 'Bollywood monthly package' },
+      { id: 'c4', name: 'Aman Verma', note: 'Guitar + Singing combo' },
+    ],
+  },
+  {
+    id: 'active',
+    title: 'Active Batch',
+    cards: [
+      { id: 'c5', name: 'Priya Singh', note: 'Free Style · Batch B' },
+      { id: 'c6', name: 'Karan Mehta', note: 'Stunt Class · 2nd month' },
+      { id: 'c7', name: 'Neha Gupta', note: 'Hip Hop · Batch A' },
+    ],
+  },
+  {
+    id: 'completed',
+    title: 'Completed',
+    cards: [
+      { id: 'c8', name: 'Vikash Jha', note: 'Wedding choreography — done' },
+    ],
+  },
+]
 
-const KanbanBoard = () => {
-  const [tasks, setTasks] = useState(initialTasks);
+export default function KanbanBoard() {
+  const [columns, setColumns] = useState(initialColumns)
+  const [dragCard, setDragCard] = useState(null)
 
-  const onDragEnd = (result) => {
-    const { source, destination } = result;
-    if (!destination) return;
-
-    const sourceTasks = Array.from(tasks[source.droppableId]);
-    const [movedTask] = sourceTasks.splice(source.index, 1);
-    const destTasks = Array.from(tasks[destination.droppableId]);
-    destTasks.splice(destination.index, 0, movedTask);
-
-    setTasks({
-      ...tasks,
-      [source.droppableId]: sourceTasks,
-      [destination.droppableId]: destTasks
-    });
-  };
+  function handleDrop(colId) {
+    if (!dragCard) return
+    setColumns((prev) => {
+      const next = prev.map((c) => ({ ...c, cards: c.cards.filter((cd) => cd.id !== dragCard.cardId) }))
+      const target = next.find((c) => c.id === colId)
+      const source = prev.find((c) => c.id === dragCard.fromCol)
+      const card = source.cards.find((cd) => cd.id === dragCard.cardId)
+      if (card) target.cards.push(card)
+      return next
+    })
+    setDragCard(null)
+  }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-        {Object.entries(tasks).map(([column, items]) => (
-          <Droppable droppableId={column} key={column}>
-            {(provided) => (
-              <div ref={provided.innerRef} {...provided.droppableProps} style={{ margin: 8, padding: 8, border: '1px solid gray', minHeight: 300, width: 200 }}>
-                <h3>{column.toUpperCase()}</h3>
-                {items.map((item, index) => (
-                  <Draggable draggableId={item} index={index} key={item}>
-                    {(provided) => (
-                      <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ ...provided.draggableProps.style, padding: 8, marginBottom: 4, backgroundColor: 'lightgray' }}>
-                        {item}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+    <div>
+      <p className="eyebrow">Enrollment pipeline</p>
+      <h1 className="kanban__title">Enrollment Board</h1>
+      <div className="stroke-divider" style={{ maxWidth: 160, margin: '8px 0 26px' }} />
+      <p className="kanban__hint">Drag a student card between stages as they move through admission.</p>
+
+      <div className="kanban__board">
+        {columns.map((col) => (
+          <div
+            className="kanban__col"
+            key={col.id}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => handleDrop(col.id)}
+          >
+            <div className="kanban__col-head">
+              <span>{col.title}</span>
+              <span className="kanban__count">{col.cards.length}</span>
+            </div>
+            <div className="kanban__cards">
+              {col.cards.map((card) => (
+                <div
+                  className="card kanban__card"
+                  key={card.id}
+                  draggable
+                  onDragStart={() => setDragCard({ cardId: card.id, fromCol: col.id })}
+                >
+                  <p className="kanban__card-name">{card.name}</p>
+                  <p className="kanban__card-note">{card.note}</p>
+                </div>
+              ))}
+              {col.cards.length === 0 && <div className="kanban__empty">Drop a card here</div>}
+            </div>
+          </div>
         ))}
       </div>
-    </DragDropContext>
-  );
-};
-
-export default KanbanBoard;
+    </div>
+  )
+}

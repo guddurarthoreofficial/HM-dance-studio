@@ -1,54 +1,41 @@
-import React from 'react';
+import './StaticPage.css'
 
-const About = () => {
+const values = [
+  { title: 'Discipline first', desc: 'Every style we teach is built on fundamentals, not shortcuts.' },
+  { title: 'Every level welcome', desc: 'From your first class to your first show, we train where you are.' },
+  { title: 'Real stage time', desc: 'Students perform — recitals, events, and wedding choreography aren\u2019t optional extras.' },
+]
+
+export default function About() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-4xl font-bold text-center text-blue-600 mb-6">About RideX Rentals</h1>
-      <p className="text-lg text-gray-700 leading-relaxed text-center max-w-3xl mx-auto">
-        At <span className="font-semibold text-black">RideX Rentals</span>, we are dedicated to making your travel convenient, affordable, and memorable. 
-        Whether you're looking to ride through the city on a bike or enjoy the comfort of a car for long drives, we’ve got you covered!
+    <div className="static-page container page-fade">
+      <p className="eyebrow">About the studio</p>
+      <h1 className="static-page__title">Built in Motihari, for dancers who mean it.</h1>
+      <div className="stroke-divider" style={{ maxWidth: 220 }} />
+
+      <p className="static-page__lead">
+        HM Dance Studio started with one idea: Motihari deserved a proper training ground —
+        not just a hobby class, but a place to actually get good. Today we train hip hop,
+        Bollywood, contemporary, and free style dancers alongside singers and guitarists,
+        all under one roof at Chandmari Glomber, near Hanuman Mandir.
       </p>
 
-      <div className="mt-12 grid md:grid-cols-3 gap-8">
-        {/* Mission */}
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <h2 className="text-xl font-semibold text-green-600 mb-2">Our Mission</h2>
-          <p className="text-gray-600">
-            To offer reliable and flexible rental options for every customer – from solo riders to family road trips.
-          </p>
-        </div>
-
-        {/* Why Choose Us */}
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <h2 className="text-xl font-semibold text-yellow-600 mb-2">Why Choose Us</h2>
-          <ul className="text-gray-600 list-disc list-inside">
-            <li>Wide selection of bikes and cars</li>
-            <li>Affordable pricing – starting at ₹350/day</li>
-            <li>Easy booking process</li>
-            <li>24/7 customer support</li>
-          </ul>
-        </div>
-
-        {/* Vision */}
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <h2 className="text-xl font-semibold text-blue-600 mb-2">Our Vision</h2>
-          <p className="text-gray-600">
-            To become India’s most loved and trusted bike & car rental platform by delivering excellence and ease.
-          </p>
-        </div>
+      <div className="static-page__grid">
+        {values.map((v) => (
+          <div className="card static-page__value" key={v.title}>
+            <h3>{v.title}</h3>
+            <p>{v.desc}</p>
+          </div>
+        ))}
       </div>
 
-      <div className="text-center mt-12">
-        <p className="text-gray-700 text-md">
-          <strong>Serving Happy Customers Across the City Since 2023</strong>
-        </p>
-        <p className="text-gray-600 mt-2">
-          Want to know more or start your journey today?{' '}
-          <a href="/contact" className="text-blue-500 hover:underline">Contact us</a>.
+      <div className="static-page__band card">
+        <h2>Learn. Practice. Perform fearlessly.</h2>
+        <p>
+          Our stunt class teaches floor tricks and stage acrobatics with proper spotting and
+          progressions — the same philosophy runs through every class we teach.
         </p>
       </div>
     </div>
-  );
-};
-
-export default About;
+  )
+}

@@ -1,24 +1,27 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
-const NotFound = () => {
+export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="text-center">
-        <h1 className="text-7xl font-bold text-blue-600">404</h1>
-        <p className="text-2xl mt-4 font-semibold text-gray-700">Page Not Found</p>
-        <p className="text-gray-500 mt-2">
-          Oops! The page you are looking for doesn't exist or has been moved.
-        </p>
-        <Link
-          to="/"
-          className="inline-block mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Go Back Home
-        </Link>
-      </div>
+    <div
+      className="page-fade"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        padding: '40px 20px',
+      }}
+    >
+      <p className="eyebrow">404</p>
+      <h1 style={{ fontSize: 'clamp(50px, 10vw, 100px)', color: 'var(--gold)', margin: '10px 0' }}>
+        Off Beat.
+      </h1>
+      <p style={{ color: 'var(--mute)', maxWidth: 380, marginBottom: 28 }}>
+        This page missed its cue. The step you're looking for isn't in this routine.
+      </p>
+      <Link to="/" className="btn btn-primary">Back to Home</Link>
     </div>
-  );
-};
-
-export default NotFound;
+  )
+}

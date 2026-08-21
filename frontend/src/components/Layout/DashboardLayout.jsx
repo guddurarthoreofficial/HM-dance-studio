@@ -1,28 +1,60 @@
-import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, Link } from 'react-router-dom'
+import { useState } from 'react'
+import './DashboardLayout.css'
 
-const DashboardLayout = () => {
+const navItems = [
+  { to: '/dashboard', label: 'Overview', end: true, icon: '◆' },
+  { to: '/dashboard/calendar', label: 'Class Calendar', icon: '▤' },
+  { to: '/dashboard/kanban', label: 'Enrollment Board', icon: '▥' },
+  { to: '/dashboard/settings', label: 'Theme Settings', icon: '●' },
+]
+
+export default function DashboardLayout() {
+  const [open, setOpen] = useState(false)
+
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <aside className="w-1/5 bg-gray-800 text-white p-4">
-        <h2 className="text-xl font-bold mb-4">Dashboard</h2>
-        <nav className="space-y-2">
-          <Link to="" className="block">Home</Link>
-          <Link to="kanban" className="block">Kanban Layout</Link>
-          <Link to="calendar" className="block">Calendar</Link>
-          <Link to="theme-settings" className="block">Theme Settings</Link>
-          <Link to="/" className="block">Back to Home</Link>
-          <Link to="/login" className="block">LogOut</Link>
-       </nav>
+    <div className="dash">
+      <aside className={`dash__sidebar ${open ? 'is-open' : ''}`}>
+        <Link to="/" className="dash__brand">
+          <span className="navbar__brand-hm">HM</span>
+          <span className="dash__brand-sub">Studio Portal</span>
+        </Link>
+
+        <nav className="dash__nav">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) => `dash__navlink ${isActive ? 'is-active' : ''}`}
+              onClick={() => setOpen(false)}
+            >
+              <span className="dash__navicon">{item.icon}</span>
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="dash__sidebar-foot">
+          <p className="eyebrow">HM Dance Studio</p>
+          <p className="dash__foot-text">Chandmari Glomber, Motihari</p>
+        </div>
       </aside>
 
-      {/* Main content */}
-      <main className="w-4/5 p-6 bg-gray-100 overflow-y-auto">
-        <Outlet />
-      </main>
+      <div className="dash__body">
+        <header className="dash__topbar">
+          <button className="dash__menu-btn" onClick={() => setOpen((v) => !v)} aria-label="Toggle sidebar">
+            <span /><span /><span />
+          </button>
+          <p className="dash__topbar-title">Studio Dashboard</p>
+          <div className="dash__topbar-user">
+            <div className="dash__avatar">HM</div>
+          </div>
+        </header>
+        <main className="dash__content page-fade">
+          <Outlet />
+        </main>
+      </div>
     </div>
-  );
-};
-
-export default DashboardLayout;
+  )
+}

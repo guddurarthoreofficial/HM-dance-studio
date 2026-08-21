@@ -1,12 +1,37 @@
-# React + Vite
+# HM Dance Studio — Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full public site + studio admin dashboard for HM Dance Studio (Motihari), built with React, React Router, and Vite.
 
-Currently, two official plugins are available:
+## Run it locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+Then open the printed local URL (usually http://localhost:5173).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Build for production
+
+```bash
+npm run build
+```
+
+Output goes to `dist/` — deploy that folder to any static host (Vercel, Netlify, etc).
+
+## What's inside
+
+- **Public site** (`/`, `/about`, `/rentals`, `/contact`) — Navbar + Footer via `MainLayout`
+- **Auth** (`/login`, `/register`) — standalone, no site chrome
+- **Studio dashboard** (`/dashboard/*`) — sidebar shell via `DashboardLayout`
+  - `/dashboard` — Overview (stats, today's schedule, activity)
+  - `/dashboard/calendar` — weekly class calendar
+  - `/dashboard/kanban` — drag-and-drop enrollment pipeline
+  - `/dashboard/settings` — theme & studio detail preferences
+
+All styling lives in `src/styles/tokens.css` as CSS variables (colors, type, spacing) — change values there to re-theme the whole app.
+
+## Notes
+
+- Login/Register currently just navigate to `/dashboard` on submit — wire up your real auth API in `src/pages/Login.jsx` and `src/pages/Register.jsx`.
+- Dashboard data (stats, schedule, kanban cards) is hardcoded sample data in each page — swap in real API calls when your backend is ready.
