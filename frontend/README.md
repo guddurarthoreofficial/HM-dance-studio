@@ -1,37 +1,36 @@
-# HM Dance Studio — Portal
+# HM Dance Studio — Website
 
-A full public site + studio admin dashboard for HM Dance Studio (Motihari), built with React, React Router, and Vite.
+React + Vite + Tailwind CSS. Dark, poster-inspired design built for HM Dance Studio, Motihari.
 
-## Run it locally
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open the printed local URL (usually http://localhost:5173).
+Open the printed localhost URL.
 
-## Build for production
+## Build for production (Vercel)
 
 ```bash
 npm run build
 ```
 
-Output goes to `dist/` — deploy that folder to any static host (Vercel, Netlify, etc).
+This outputs a `dist/` folder — deploy that to Vercel same as your current site
+(hm-dance-studio.vercel.app). Framework preset: **Vite**.
 
-## What's inside
+## Things to edit (all at the top of `src/App.jsx`)
 
-- **Public site** (`/`, `/about`, `/rentals`, `/contact`) — Navbar + Footer via `MainLayout`
-- **Auth** (`/login`, `/register`) — standalone, no site chrome
-- **Studio dashboard** (`/dashboard/*`) — sidebar shell via `DashboardLayout`
-  - `/dashboard` — Overview (stats, today's schedule, activity)
-  - `/dashboard/calendar` — weekly class calendar
-  - `/dashboard/kanban` — drag-and-drop enrollment pipeline
-  - `/dashboard/settings` — theme & studio detail preferences
+- `SOCIAL.instagram` / `SOCIAL.facebook` — put your real Instagram and Facebook links here.
+- `REGISTER_URL` — already set to your Google Form.
+- `WHATSAPP_NUMBER` — the floating WhatsApp button and "Chat on WhatsApp" link both use this
+  number (currently Piyush Sir's, `+91 89696 64247`).
+- `PHONE_NUMBERS` — the two studio numbers shown in the Location section.
+- `MAP_QUERY` — the text used to place the embedded Google Map pin.
+- `PROGRAMS` — the 8 class cards (Hip Hop, Bollywood, Contemporary, Semi Classical, Free Style,
+  Kids Dance, Yoga, Exercise). Edit `desc` for any of them freely.
 
-All styling lives in `src/styles/tokens.css` as CSS variables (colors, type, spacing) — change values there to re-theme the whole app.
-
-## Notes
-
-- Login/Register currently just navigate to `/dashboard` on submit — wire up your real auth API in `src/pages/Login.jsx` and `src/pages/Register.jsx`.
-- Dashboard data (stats, schedule, kanban cards) is hardcoded sample data in each page — swap in real API calls when your backend is ready.
+No image files are required — the design uses color, type and layout instead of photos, so it'll
+look right the moment you deploy it. If you'd like real photos of the studio/teacher swapped in
+later, drop them in `src/assets/` and reference them in `About` (teacher photo) and `Hero`.
