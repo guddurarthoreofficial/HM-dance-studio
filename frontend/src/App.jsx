@@ -236,8 +236,21 @@ function About({ onRegister }) {
     <section id="about" className="border-b border-stage-line bg-stage-raised">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 md:grid-cols-[minmax(0,320px)_1fr] md:items-center">
         <div className="relative mx-auto aspect-[4/5] w-full max-w-xs overflow-hidden rounded-sm border border-stage-line bg-gradient-to-br from-stage-black via-stage-raised to-stage-black">
-          <div className="absolute inset-0 spotlight" />
-          <div className="absolute inset-0 flex items-end p-5">
+          {/* Spotlight overlay to enhance the image on hover */}
+          <div className="absolute inset-0 spotlight z-10" />
+          
+          {/* Instructor Image - Corrected path with standard import/usage */}
+          <img 
+            src="https://cdn.corenexis.com/f/BZHuoVpv1jM.jpeg" 
+            alt="Piyush Sir - Founder & Lead Instructor"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+
+          {/* Gradient overlay for text contrast */}
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-stage-black to-transparent" />
+
+          {/* Text content with higher z-index */}
+          <div className="absolute inset-0 flex items-end p-5 z-20">
             <div>
               <p className="font-display text-3xl text-ivory">Piyush Sir</p>
               <p className="font-body text-sm text-muted">Founder &amp; Lead Instructor</p>
