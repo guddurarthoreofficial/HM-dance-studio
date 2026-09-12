@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Music, Film, Sparkles, Activity, Zap, Smile, HeartPulse, Dumbbell, ArrowRight } from 'lucide-react'
 
 // ---- Config: change these two things and the whole site updates ----
 const SOCIAL = {
@@ -12,14 +13,14 @@ const PHONE_NUMBERS = ['+91 74888 06350', '+91 90060 02329']
 const MAP_QUERY = 'Chandmari Golamber, Near Hanuman Mandir, Motihari, Bihar-845401'
 
 const PROGRAMS = [
-  { name: 'Hip Hop', mark: 'HH', desc: 'Breaks, grooves and freestyle power — build rhythm before you build tricks.' },
-  { name: 'Bollywood', mark: 'BW', desc: 'High-energy film choreography, expression and stage presence.' },
-  { name: 'Contemporary', mark: 'CN', desc: 'Fluid, emotive movement rooted in control and storytelling.' },
-  { name: 'Semi Classical', mark: 'SC', desc: 'Traditional footwork and mudras blended with modern staging.' },
-  { name: 'Free Style', mark: 'FS', desc: 'No set steps — find your own vocabulary and battle-ready confidence.' },
-  { name: 'Kids Dance', mark: 'KD', desc: 'Coordination, discipline and confidence, taught through play.' },
-  { name: 'Yoga', mark: 'YG', desc: 'Breath, flexibility and strength — the foundation every dancer needs.' },
-  { name: 'Exercise', mark: 'EX', desc: 'Conditioning and fitness training built around a dancer\'s body.' },
+  { name: 'Hip Hop', icon: Music, desc: 'Breaks, grooves and freestyle power — build rhythm before you build tricks.' },
+  { name: 'Bollywood', icon: Film, desc: 'High-energy film choreography, expression and stage presence.' },
+  { name: 'Contemporary', icon: Sparkles, desc: 'Fluid, emotive movement rooted in control and storytelling.' },
+  { name: 'Semi Classical', icon: Activity, desc: 'Traditional footwork and mudras blended with modern staging.' },
+  { name: 'Free Style', icon: Zap, desc: 'No set steps — find your own vocabulary and battle-ready confidence.' },
+  { name: 'Kids Dance', icon: Smile, desc: 'Coordination, discipline and confidence, taught through play.' },
+  { name: 'Yoga', icon: HeartPulse, desc: 'Breath, flexibility and strength — the foundation every dancer needs.' },
+  { name: 'Exercise', icon: Dumbbell, desc: 'Conditioning and fitness training built around a dancer\'s body.' },
 ]
 
 function WhatsAppIcon(props) {
@@ -236,30 +237,108 @@ function Marquee() {
   )
 }
 
+// function Programs() {
+//   return (
+//     <section id="programs" className="border-b border-stage-line bg-stage-black">
+//       <div className="mx-auto max-w-6xl px-5 py-20">
+//         <div className="max-w-xl">
+//           <h2 className="font-display text-4xl text-ivory sm:text-5xl">What you can train in</h2>
+//           <p className="mt-4 font-body text-muted">
+//             Eight programs, one studio. Pick a style, or move between them as your training grows.
+//           </p>
+//         </div>
+
+//         <div className="mt-12 grid gap-px overflow-hidden rounded-sm border border-stage-line bg-stage-line sm:grid-cols-2 lg:grid-cols-4">
+//           {PROGRAMS.map((p) => (
+//             <div key={p.name} className="group bg-stage-raised p-6 transition-colors hover:bg-stage-black">
+//               <span className="font-display text-sm text-crimson">{p.mark}</span>
+//               <h3 className="mt-3 font-body text-lg font-semibold text-ivory">{p.name}</h3>
+//               <p className="mt-2 font-body text-sm leading-relaxed text-muted">{p.desc}</p>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   )
+// }
+
 function Programs() {
   return (
-    <section id="programs" className="border-b border-stage-line bg-stage-black">
-      <div className="mx-auto max-w-6xl px-5 py-20">
-        <div className="max-w-xl">
-          <h2 className="font-display text-4xl text-ivory sm:text-5xl">What you can train in</h2>
-          <p className="mt-4 font-body text-muted">
-            Eight programs, one studio. Pick a style, or move between them as your training grows.
-          </p>
+    <section id="programs" className="relative border-b border-stage-line bg-stage-black py-24 overflow-hidden">
+      {/* Background Glow Accent */}
+      <div className="absolute top-1/2 left-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/5 blur-[120px] pointer-events-none" />
+
+      <div className="mx-auto max-w-6xl px-5">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div className="max-w-xl">
+            <span className="font-body text-xs font-semibold uppercase tracking-widest text-crimson">
+              Curriculum & Disciplines
+            </span>
+            <h2 className="mt-2 font-display text-4xl text-ivory sm:text-5xl">
+              What You Can <span className="text-gold italic">Train In</span>
+            </h2>
+            <p className="mt-4 font-body text-sm leading-relaxed text-muted">
+              Eight specialized programs designed for all skill levels. Master a single discipline or combine styles to build a complete dancer's toolkit.
+            </p>
+          </div>
+          
+          <div className="hidden md:block">
+            <span className="inline-flex items-center gap-2 rounded-full border border-stage-line bg-stage-raised/80 px-4 py-2 font-body text-xs font-medium text-ivory/80 backdrop-blur-sm">
+              <span className="h-2 w-2 rounded-full bg-gold animate-pulse" />
+              Enrollment Open Across All Batches
+            </span>
+          </div>
         </div>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-sm border border-stage-line bg-stage-line sm:grid-cols-2 lg:grid-cols-4">
-          {PROGRAMS.map((p) => (
-            <div key={p.name} className="group bg-stage-raised p-6 transition-colors hover:bg-stage-black">
-              <span className="font-display text-sm text-crimson">{p.mark}</span>
-              <h3 className="mt-3 font-body text-lg font-semibold text-ivory">{p.name}</h3>
-              <p className="mt-2 font-body text-sm leading-relaxed text-muted">{p.desc}</p>
-            </div>
-          ))}
+        {/* Programs Grid */}
+        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {PROGRAMS.map((p, idx) => {
+            const IconComponent = p.icon
+            return (
+              <div
+                key={p.name}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-md border border-stage-line/80 bg-stage-raised/60 p-7 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-gold/50 hover:bg-stage-black hover:shadow-xl hover:shadow-gold/5"
+              >
+                {/* Top Card Gradient Accent on Hover */}
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                <div>
+                  <div className="flex items-center justify-between">
+                    {/* SVG Icon Box */}
+                    <div className="flex h-12 w-12 items-center justify-center rounded-md border border-stage-line bg-stage-black/60 text-gold transition-all duration-300 group-hover:border-gold group-hover:bg-gold group-hover:text-stage-black">
+                      <IconComponent className="h-6 w-6" />
+                    </div>
+                    <span className="font-body text-xs font-bold text-muted/40 transition-colors duration-300 group-hover:text-gold">
+                      0{idx + 1}
+                    </span>
+                  </div>
+
+                  {/* Clean Non-Blurred Heading */}
+                  <h3 className="mt-6 font-body text-xl font-bold tracking-wide text-ivory transition-colors duration-300 group-hover:text-gold">
+                    {p.name}
+                  </h3>
+
+                  <p className="mt-3 font-body text-xs leading-relaxed text-muted transition-colors duration-300 group-hover:text-ivory/80">
+                    {p.desc}
+                  </p>
+                </div>
+
+                {/* Action Link */}
+                <div className="mt-8 flex items-center gap-2 font-body text-xs font-semibold uppercase tracking-wider text-gold opacity-0 transition-all duration-300 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0">
+                  <span>Explore Program</span>
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>
   )
 }
+
+
 
 function About({ onRegister }) {
   return (
@@ -381,53 +460,139 @@ function CTA({ onRegister }) {
   )
 }
 
+// function Footer() {
+//   return (
+//     <footer className="bg-stage-black">
+//       <div className="mx-auto max-w-6xl px-5 py-12">
+//         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+//           <div>
+//             <span className="font-display text-2xl text-gold">HM</span>{' '}
+//             <span className="font-body text-sm font-semibold text-ivory">Dance Studio</span>
+//             <p className="mt-2 max-w-xs font-body text-sm text-muted">
+//               Dance · Express · Inspire — where passion meets perfection.
+//             </p>
+//           </div>
+
+//           <div className="flex gap-4">
+//             <a
+//               href={SOCIAL.instagram}
+//               target="_blank"
+//               rel="noreferrer"
+//               aria-label="Instagram"
+//               className="flex h-10 w-10 items-center justify-center rounded-sm border border-stage-line text-ivory transition-colors hover:border-gold hover:text-gold"
+//             >
+//               <InstagramIcon className="h-5 w-5" />
+//             </a>
+//             <a
+//               href={SOCIAL.facebook}
+//               target="_blank"
+//               rel="noreferrer"
+//               aria-label="Facebook"
+//               className="flex h-10 w-10 items-center justify-center rounded-sm border border-stage-line text-ivory transition-colors hover:border-gold hover:text-gold"
+//             >
+//               <FacebookIcon className="h-5 w-5" />
+//             </a>
+//             <a
+//               href={`https://wa.me/${WHATSAPP_NUMBER}`}
+//               target="_blank"
+//               rel="noreferrer"
+//               aria-label="WhatsApp"
+//               className="flex h-10 w-10 items-center justify-center rounded-sm border border-stage-line text-ivory transition-colors hover:border-gold hover:text-gold"
+//             >
+//               <WhatsAppIcon className="h-5 w-5" />
+//             </a>
+//           </div>
+//         </div>
+
+//         <div className="mt-10 flex flex-col gap-2 border-t border-stage-line pt-6 font-body text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+//           <p>© {new Date().getFullYear()} HM Dance Studio, Motihari. All rights reserved.</p>
+//           <p>Chandmari Golamber, Near Hanuman Mandir, Motihari, Bihar-845401</p>
+//         </div>
+//       </div>
+//     </footer>
+//   )
+// }
+
 function Footer() {
   return (
-    <footer className="bg-stage-black">
+    <footer className="bg-stage-black border-t border-stage-line">
       <div className="mx-auto max-w-6xl px-5 py-12">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <span className="font-display text-2xl text-gold">HM</span>{' '}
-            <span className="font-body text-sm font-semibold text-ivory">Dance Studio</span>
-            <p className="mt-2 max-w-xs font-body text-sm text-muted">
-              Dance · Express · Inspire — where passion meets perfection.
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          
+          {/* Brand & Mission */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-2">
+              <span className="font-display text-3xl font-bold text-gold">HM</span>
+              <span className="font-body text-base font-semibold tracking-wider text-ivory">DANCE STUDIO</span>
+            </div>
+            <p className="mt-3 font-body text-xs leading-relaxed text-muted">
+              Dance · Express · Inspire — Where passion meets perfection. Join us to transform your energy into movement.
             </p>
           </div>
 
-          <div className="flex gap-4">
-            <a
-              href={SOCIAL.instagram}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-              className="flex h-10 w-10 items-center justify-center rounded-sm border border-stage-line text-ivory transition-colors hover:border-gold hover:text-gold"
-            >
-              <InstagramIcon className="h-5 w-5" />
-            </a>
-            <a
-              href={SOCIAL.facebook}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Facebook"
-              className="flex h-10 w-10 items-center justify-center rounded-sm border border-stage-line text-ivory transition-colors hover:border-gold hover:text-gold"
-            >
-              <FacebookIcon className="h-5 w-5" />
-            </a>
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="WhatsApp"
-              className="flex h-10 w-10 items-center justify-center rounded-sm border border-stage-line text-ivory transition-colors hover:border-gold hover:text-gold"
-            >
-              <WhatsAppIcon className="h-5 w-5" />
-            </a>
+          {/* Quick Links */}
+          <div>
+            <p className="font-body text-xs font-semibold uppercase tracking-widest text-gold">Quick Links</p>
+            <ul className="mt-3 space-y-2 font-body text-xs text-muted">
+              <li><a href="#about" className="transition-colors hover:text-ivory">About Piyush Sir</a></li>
+              <li><a href="#classes" className="transition-colors hover:text-ivory">Dance Batches</a></li>
+              <li><a href="#gallery" className="transition-colors hover:text-ivory">Studio Gallery</a></li>
+              <li><a href="#contact" className="transition-colors hover:text-ivory">Contact Us</a></li>
+            </ul>
           </div>
+
+          {/* Contact Details */}
+          <div>
+            <p className="font-body text-xs font-semibold uppercase tracking-widest text-gold">Location & Contact</p>
+            <address className="mt-3 font-body text-xs not-italic leading-relaxed text-muted">
+              Chandmari Golamber, Near Hanuman Mandir,<br />
+              Motihari, Bihar - 845401<br />
+              <span className="mt-1 block text-ivory/90 font-medium">Phone: +91 {PHONE_NUMBERS[0]}</span>
+            </address>
+          </div>
+
+          {/* Social Links */}
+          <div>
+            <p className="font-body text-xs font-semibold uppercase tracking-widest text-gold">Connect With Us</p>
+            <div className="mt-3 flex gap-3">
+              <a
+                href={SOCIAL.instagram}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+                className="flex h-9 w-9 items-center justify-center rounded-sm border border-stage-line text-ivory transition-all hover:border-gold hover:bg-gold/10 hover:text-gold"
+              >
+                <InstagramIcon className="h-4 w-4" />
+              </a>
+              <a
+                href={SOCIAL.facebook}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Facebook"
+                className="flex h-9 w-9 items-center justify-center rounded-sm border border-stage-line text-ivory transition-all hover:border-gold hover:bg-gold/10 hover:text-gold"
+              >
+                <FacebookIcon className="h-4 w-4" />
+              </a>
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="WhatsApp"
+                className="flex h-9 w-9 items-center justify-center rounded-sm border border-stage-line text-ivory transition-all hover:border-gold hover:bg-gold/10 hover:text-gold"
+              >
+                <WhatsAppIcon className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+
         </div>
 
-        <div className="mt-10 flex flex-col gap-2 border-t border-stage-line pt-6 font-body text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+        {/* Bottom Credits Line */}
+        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-stage-line/60 pt-6 font-body text-xs text-muted sm:flex-row">
           <p>© {new Date().getFullYear()} HM Dance Studio, Motihari. All rights reserved.</p>
-          <p>Chandmari Golamber, Near Hanuman Mandir, Motihari, Bihar-845401</p>
+          <p className="flex items-center gap-1 text-ivory/80">
+            Crafted with <span className="text-crimson">♥</span> by <span className="font-semibold text-gold">Guddu Singh Rathore</span>
+          </p>
         </div>
       </div>
     </footer>
