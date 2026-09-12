@@ -23,7 +23,7 @@ export default function Contact() {
         <div className="card contact-info">
           <div>
             <p className="eyebrow">Location</p>
-            <p className="contact-info__text">Chandmari Glomber, Near Hanuman Mandir, Motihari, Bihar</p>
+            <p className="contact-info__text">Chandmari Glomber, Near Hanuman Mandir, Motihari, Bihar-845401</p>
           </div>
           <div>
             <p className="eyebrow">Phone</p>

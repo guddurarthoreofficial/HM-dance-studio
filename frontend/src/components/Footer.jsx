@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="footer__col">
           <p className="footer__heading">Visit</p>
           <p className="footer__text">Chandmari Glomber, Near Hanuman Mandir</p>
-          <p className="footer__text">Motihari, Bihar</p>
+          <p className="footer__text">Motihari, Bihar-845401</p>
         </div>
 
         <div className="footer__col">

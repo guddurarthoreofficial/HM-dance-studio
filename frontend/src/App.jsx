@@ -2,14 +2,14 @@ import { useState } from 'react'
 
 // ---- Config: change these two things and the whole site updates ----
 const SOCIAL = {
-  instagram: 'https://instagram.com/hmdancestudio', // change to your real handle
+  instagram: 'https://www.instagram.com/happy_moment_dance_studio', // change to your real handle
   facebook: 'https://facebook.com/hmdancestudio',   // change to your real page
 }
 const REGISTER_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSdh3O9bcm18y7ZiPqCA7fYanD7jKLHdoNc9EMPKrKGqaHiHFw/viewform?usp=header'
 const WHATSAPP_NUMBER = '918969664247' // Piyush Sir
 const PHONE_NUMBERS = ['+91 74888 06350', '+91 90060 02329']
-const MAP_QUERY = 'Chandmari Golamber, Near Hanuman Mandir, Motihari, Bihar'
+const MAP_QUERY = 'Chandmari Golamber, Near Hanuman Mandir, Motihari, Bihar-845401'
 
 const PROGRAMS = [
   { name: 'Hip Hop', mark: 'HH', desc: 'Breaks, grooves and freestyle power — build rhythm before you build tricks.' },
@@ -130,7 +130,7 @@ function Hero({ onRegister }) {
     <section id="top" className="spotlight relative overflow-hidden border-b border-stage-line">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 py-16 md:grid-cols-2 md:py-28">
         <div className="flex flex-col justify-center">
-          <p className="font-body text-sm font-medium text-crimson">Motihari, Bihar</p>
+          <p className="font-body text-sm font-medium text-crimson">Motihari, Bihar-845401</p>
           <h1 className="mt-3 font-display text-5xl leading-[0.95] text-ivory sm:text-6xl">
             Dance Nothing
             <br />
@@ -172,7 +172,7 @@ function Hero({ onRegister }) {
           </div>
         </div>
 
-        <div className="relative flex items-center justify-center">
+        {/* <div className="relative flex items-center justify-center">
           <div className="relative aspect-square w-full max-w-sm">
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold/25 via-crimson/10 to-transparent blur-2xl" />
             <div className="absolute inset-6 rounded-full border border-stage-line" />
@@ -184,7 +184,37 @@ function Hero({ onRegister }) {
               Admission Free · 25% off on package
             </div>
           </div>
-        </div>
+        </div> */}
+
+        <div className="relative flex items-center justify-center">
+  {/* Outer Container (No overflow-hidden so badge isn't clipped) */}
+  <div className="relative aspect-square w-full max-w-sm">
+    
+    {/* Inner Circle Image Container */}
+    <div className="relative h-full w-full overflow-hidden rounded-full border border-stage-line bg-stage-black/80">
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gold/25 via-crimson/10 to-transparent blur-2xl" />
+      
+      {/* Decorative Rings */}
+      <div className="absolute inset-6 rounded-full border border-stage-line z-10 pointer-events-none" />
+      <div className="absolute inset-16 rounded-full border border-gold/40 z-10 pointer-events-none" />
+
+      {/* Generated Logo Image - Properly Fitted */}
+      <img
+        src="https://cdn.corenexis.com/f/ksZssilhH2u.png"
+        alt="HM Dance Studio Logo"
+        className="h-full w-full object-cover scale-125 object-center filter drop-shadow-xl z-0"
+      />
+    </div>
+
+    {/* Offer Badge (Positioned outside the overflow area) */}
+    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-crimson px-5 py-2 text-center font-body text-xs font-bold uppercase tracking-wide text-ivory shadow-lg shadow-crimson/40 z-30">
+      Admission Free · 25% off on package
+    </div>
+
+  </div>
+</div>
+        
       </div>
     </section>
   )
@@ -299,7 +329,7 @@ function Location() {
             <p className="font-body text-muted">
               Chandmari Golamber, Near Hanuman Mandir
               <br />
-              Motihari, Bihar
+              Motihari, Bihar-845401
             </p>
           </div>
           <div className="mt-4 flex items-start gap-3">
@@ -397,7 +427,7 @@ function Footer() {
 
         <div className="mt-10 flex flex-col gap-2 border-t border-stage-line pt-6 font-body text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} HM Dance Studio, Motihari. All rights reserved.</p>
-          <p>Chandmari Golamber, Near Hanuman Mandir, Motihari, Bihar</p>
+          <p>Chandmari Golamber, Near Hanuman Mandir, Motihari, Bihar-845401</p>
         </div>
       </div>
     </footer>
