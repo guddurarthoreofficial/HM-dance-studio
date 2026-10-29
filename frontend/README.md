@@ -1,36 +1,16 @@
-# HM Dance Studio — Website
+# React + Vite
 
-React + Vite + Tailwind CSS. Dark, poster-inspired design built for HM Dance Studio, Motihari.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Run locally
+Currently, two official plugins are available:
 
-```bash
-npm install
-npm run dev
-```
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-Open the printed localhost URL.
+## React Compiler
 
-## Build for production (Vercel)
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-```bash
-npm run build
-```
+## Expanding the Oxlint configuration
 
-This outputs a `dist/` folder — deploy that to Vercel same as your current site
-(hm-dance-studio.vercel.app). Framework preset: **Vite**.
-
-## Things to edit (all at the top of `src/App.jsx`)
-
-- `SOCIAL.instagram` / `SOCIAL.facebook` — put your real Instagram and Facebook links here.
-- `REGISTER_URL` — already set to your Google Form.
-- `WHATSAPP_NUMBER` — the floating WhatsApp button and "Chat on WhatsApp" link both use this
-  number (currently Piyush Sir's, `+91 89696 64247`).
-- `PHONE_NUMBERS` — the two studio numbers shown in the Location section.
-- `MAP_QUERY` — the text used to place the embedded Google Map pin.
-- `PROGRAMS` — the 8 class cards (Hip Hop, Bollywood, Contemporary, Semi Classical, Free Style,
-  Kids Dance, Yoga, Exercise). Edit `desc` for any of them freely.
-
-No image files are required — the design uses color, type and layout instead of photos, so it'll
-look right the moment you deploy it. If you'd like real photos of the studio/teacher swapped in
-later, drop them in `src/assets/` and reference them in `About` (teacher photo) and `Hero`.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.

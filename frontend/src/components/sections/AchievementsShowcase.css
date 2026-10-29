@@ -1,0 +1,343 @@
+
+.hm-awards {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(80px, 10vw, 145px) 0;
+  background:
+    radial-gradient(
+      ellipse at 92% 45%,
+      rgb(112 25 34 / 13%),
+      transparent 43%
+    ),
+    #080808;
+  color: #fff;
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+.hm-awards__container {
+  width: min(1450px, 100%);
+  margin-inline: auto;
+  padding-inline: clamp(22px, 7.5vw, 110px);
+}
+
+.hm-awards__heading {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: end;
+  gap: 50px;
+  margin-bottom: 47px;
+}
+
+.hm-awards__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: #d7b46b;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  line-height: 1.8;
+}
+
+.hm-awards__eyebrow > span {
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  flex-shrink: 0;
+  background: #d7b46b;
+}
+
+.hm-awards__title {
+  margin: 25px 0 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(45px, 6vw, 83px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.hm-awards__title em {
+  color: #d7b46b;
+  font-weight: 500;
+}
+
+.hm-awards__intro {
+  max-width: 430px;
+  justify-self: end;
+  margin: 0 0 6px;
+  color: rgb(255 255 255 / 58%);
+  font-size: 13px;
+  line-height: 2;
+}
+
+/* Editorial award gallery */
+
+.hm-awards__grid {
+  display: grid;
+  grid-template-columns: 1.13fr 0.87fr;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.hm-awards__card {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgb(215 180 107 / 17%);
+  background: #111;
+}
+
+.hm-awards__card--featured {
+  grid-row: span 2;
+}
+
+.hm-awards__image {
+  position: relative;
+  min-height: 240px;
+  height: 100%;
+  overflow: hidden;
+  background: #17130e;
+}
+
+.hm-awards__card--featured .hm-awards__image {
+  min-height: 535px;
+}
+
+.hm-awards__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.83) contrast(1.04) brightness(0.86);
+  transition:
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 450ms ease;
+}
+
+.hm-awards__card--featured .hm-awards__image img {
+  object-position: center 35%;
+}
+
+.hm-awards__card:hover .hm-awards__image img {
+  transform: scale(1.045);
+  filter: saturate(0.98) contrast(1.04) brightness(0.96);
+}
+
+.hm-awards__image-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(0 0 0 / 15%),
+    transparent 34%,
+    rgb(0 0 0 / 45%)
+  );
+  pointer-events: none;
+}
+
+.hm-awards__photo-number {
+  position: absolute;
+  top: 17px;
+  left: 17px;
+  display: inline-flex;
+  min-width: 37px;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(255 255 255 / 30%);
+  background: rgb(8 8 8 / 48%);
+  color: #fff;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  backdrop-filter: blur(10px);
+}
+
+.hm-awards__photo-symbol {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  color: #f0d8a0;
+  font-size: 19px;
+  transition: transform 300ms ease;
+}
+
+.hm-awards__card:hover .hm-awards__photo-symbol {
+  transform: rotate(45deg);
+}
+
+.hm-awards__card-caption {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 17px;
+  background: #0b0b0b;
+  color: rgb(255 255 255 / 75%);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.hm-awards__card-caption > span:last-child {
+  color: #d7b46b;
+  font-size: 17px;
+  transition: transform 250ms ease;
+}
+
+.hm-awards__card:hover .hm-awards__card-caption > span:last-child {
+  transform: translate(2px, -2px);
+}
+
+/* Bottom callout */
+
+.hm-awards__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 52px;
+  padding-top: 32px;
+  border-top: 1px solid rgb(255 255 255 / 11%);
+}
+
+.hm-awards__footer-copy p {
+  margin: 10px 0 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(20px, 3vw, 31px);
+  line-height: 1.35;
+}
+
+.hm-awards__footer-copy p em {
+  color: #d7b46b;
+}
+
+.hm-awards__link {
+  display: inline-flex;
+  min-height: 49px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 16px;
+  border: 1px solid rgb(215 180 107 / 48%);
+  color: #ecd59f !important;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  transition:
+    background 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease;
+}
+
+.hm-awards__link-arrow {
+  font-size: 17px;
+  transition: transform 220ms ease;
+}
+
+.hm-awards__link:hover {
+  border-color: #d7b46b;
+  background: #d7b46b;
+  color: #080808 !important;
+}
+
+.hm-awards__link:hover .hm-awards__link-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* Responsive gallery */
+
+@media (max-width: 760px) {
+  .hm-awards__heading {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .hm-awards__intro {
+    justify-self: start;
+  }
+
+  .hm-awards__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 11px;
+  }
+
+  .hm-awards__card--featured {
+    grid-row: auto;
+    grid-column: 1 / -1;
+  }
+
+  .hm-awards__card--featured .hm-awards__image {
+    min-height: 350px;
+    height: 55vw;
+    max-height: 470px;
+  }
+
+  .hm-awards__image {
+    min-height: 200px;
+  }
+
+  .hm-awards__image img {
+    min-height: 200px;
+  }
+
+  .hm-awards__footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 460px) {
+  .hm-awards {
+    padding-block: 70px;
+  }
+
+  .hm-awards__container {
+    padding-inline: 20px;
+  }
+
+  .hm-awards__title {
+    font-size: clamp(44px, 12vw, 58px);
+  }
+
+  .hm-awards__grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .hm-awards__card--featured {
+    grid-column: auto;
+  }
+
+  .hm-awards__card--featured .hm-awards__image {
+    min-height: 330px;
+  }
+
+  .hm-awards__image,
+  .hm-awards__image img {
+    min-height: 260px;
+  }
+
+  .hm-awards__footer {
+    margin-top: 35px;
+    padding-top: 25px;
+  }
+
+  .hm-awards__link {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-awards *,
+  .hm-awards *::before,
+  .hm-awards *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
