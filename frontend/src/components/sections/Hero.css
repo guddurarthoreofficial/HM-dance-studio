@@ -9,6 +9,7 @@
   --stage-dim: rgb(243 236 224 / 68%);
   --spot-x: 50%;
   --spot-y: 38%;
+  --nav-offset: 89px; /* fixed navbar height, so content is not hidden under it */
 
   position: relative;
   isolation: isolate;
@@ -16,6 +17,7 @@
   min-height: 100svh;
   flex-direction: column;
   overflow: hidden;
+  padding-top: var(--nav-offset);
   background: var(--stage-bg);
   color: var(--stage-ivory);
   font-family: "Manrope", system-ui, sans-serif;
@@ -497,6 +499,14 @@
 
 .hm-stage-marquee:hover .hm-stage-track {
   animation-play-state: paused;
+}
+
+/* ---------- Navbar height changes on mobile ---------- */
+
+@media (max-width: 900px) {
+  .hm-cinematic-hero {
+    --nav-offset: 77px;
+  }
 }
 
 /* ---------- Tablet ---------- */
