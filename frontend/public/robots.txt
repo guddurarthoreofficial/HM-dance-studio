@@ -1,0 +1,5 @@
+
+User-agent: *
+Allow: /
+
+Sitemap: https://hmdance.shiulitech.in/sitemap.xml

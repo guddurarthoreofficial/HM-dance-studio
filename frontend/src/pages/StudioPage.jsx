@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 const programs = [
   "Hip Hop",
@@ -69,6 +70,50 @@ const pages = {
   },
 };
 
+const seoPages = {
+  about: {
+    title: "About HM Dance Studio | HM Dance Group Motihari",
+    description:
+      "Discover HM Dance Studio in Motihari, Bihar. Learn about our dance studio, instructor Piyush Sir and our passion for dance and movement.",
+    url: "/about",
+  },
+
+  programs: {
+    title: "Dance Classes in Motihari | HM Dance Studio",
+    description:
+      "Explore dance classes in Motihari at HM Dance Studio. Learn Hip Hop, Bollywood, Contemporary, Semi Classical, Freestyle, Kids Dance, Yoga and more.",
+    url: "/programs",
+  },
+
+  achievements: {
+    title: "HM Dance Studio Achievements | Motihari",
+    description:
+      "Explore performances, milestones and achievements from HM Dance Studio in Motihari, Bihar.",
+    url: "/achievements",
+  },
+
+  gallery: {
+    title: "Dance Gallery | HM Dance Studio Motihari",
+    description:
+      "Explore dance practice, performances and studio moments at HM Dance Studio, Motihari.",
+    url: "/gallery",
+  },
+
+  videos: {
+    title: "Dance Videos | HM Dance Studio Motihari",
+    description:
+      "Watch dance performances, dance clips and studio updates from HM Dance Studio in Motihari.",
+    url: "/videos",
+  },
+
+  contact: {
+    title: "Contact HM Dance Studio | Dance Class Motihari",
+    description:
+      "Contact HM Dance Studio in Chandmari Golamber, Motihari, Bihar. Ask about dance classes, admissions and free trial sessions.",
+    url: "/contact",
+  },
+};
+
 const instagram =
   "https://www.instagram.com/happy_moment_dance_studio";
 
@@ -93,6 +138,8 @@ function ActionLink({ href, children, external = false }) {
 export default function StudioPage({ page }) {
   const data = pages[page];
 
+  const seo = seoPages[page];
+
   if (!data) {
     return (
       <section className="hm-page">
@@ -107,6 +154,24 @@ export default function StudioPage({ page }) {
 
   return (
     <main className={`hm-page hm-page--${data.type}`}>
+      <Helmet>
+        <title>{seo.title}</title>
+
+        <meta name="description" content={seo.description} />
+
+        <link
+          rel="canonical"
+          href={`https://hmdance.shiulitech.in${seo.url}`}
+        />
+
+        <meta property="og:title" content={seo.title} />
+        <meta property="og:description" content={seo.description} />
+        <meta
+          property="og:url"
+          content={`https://hmdance.shiulitech.in${seo.url}`}
+        />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="hm-page-orb" aria-hidden="true" />
 
       <section className="hm-page-hero">
