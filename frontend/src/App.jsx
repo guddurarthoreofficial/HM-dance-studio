@@ -25,6 +25,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import StudentDashboard from "./pages/student/Dashboard";
 import Students from "./pages/admin/Students";
 import StudentDetails from "./pages/admin/StudentDetails";
+import Admissions from "./pages/admin/Admissions";
 
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -113,6 +114,7 @@ function AppRoutes() {
               path="students/:studentId"
               element={<StudentDetails />}
             />
+            <Route path="admissions" element={<Admissions />} />
           </Route>
         </Route>
 

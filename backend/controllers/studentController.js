@@ -2,8 +2,14 @@ const User = require("../models/User");
 const Student = require("../models/Student");
 const Counter = require("../models/Counter");
 
+const transporter = require("../config/mailer");
+
+
+
+
 const createStudent = async (req, res) => {
   let createdUser;
+  let createdStudent;
 
   try {
     const {
@@ -21,6 +27,7 @@ const createStudent = async (req, res) => {
       permanentAddress,
     } = req.body;
 
+    // Required field validation
     if (
       !name ||
       !fatherName ||
@@ -75,15 +82,21 @@ const createStudent = async (req, res) => {
       });
     }
 
+    // Generate Student ID
     const year = new Date().getFullYear();
+
     const counter = await Counter.findOneAndUpdate(
       { name: `student-${year}` },
       { $inc: { sequence: 1 } },
-      { new: true, upsert: true },
+      { new: true, upsert: true }
     );
 
-    const studentId = `HMDS-${year}-${String(counter.sequence).padStart(4, "0")}`;
+    const studentId = `HMDS-${year}-${String(
+      counter.sequence
+    ).padStart(4, "0")}`;
 
+    // Create login account
+    // User model should hash password using its existing bcrypt pre-save hook.
     createdUser = await User.create({
       name: name.trim(),
       email: normalizedEmail,
@@ -93,7 +106,8 @@ const createStudent = async (req, res) => {
       isActive: true,
     });
 
-    const student = await Student.create({
+    // Create student profile
+    createdStudent = await Student.create({
       user: createdUser._id,
       studentId,
       name: name.trim(),
@@ -110,19 +124,82 @@ const createStudent = async (req, res) => {
       admissionDate: new Date(),
     });
 
+    // Send login credentials to student's email
+    let emailSent = false;
+    let emailError = null;
+
+    try {
+      await transporter.sendMail({
+        from: `"HM Dance Studio" <${process.env.SMTP_USER}>`,
+        to: normalizedEmail,
+        subject: "Welcome to HM Dance Studio - Your Login Credentials",
+        text: `
+Hello ${name},
+
+Welcome to HM Dance Studio!
+
+Your admission has been successfully completed.
+
+Your student login details are:
+
+Student ID: ${studentId}
+Login Email: ${normalizedEmail}
+Temporary Password: ${password}
+
+Please log in using these credentials and change your password after your first login.
+
+Keep your login credentials confidential.
+
+Regards,
+HM Dance Studio
+        `,
+        html: `
+          <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:25px;border:1px solid #eee;border-radius:12px;color:#222">
+            <h2 style="color:#6d28d9">Welcome to HM Dance Studio!</h2>
+            <p>Hello <strong>${name}</strong>,</p>
+            <p>Your admission has been successfully completed.</p>
+            <p>Here are your student login credentials:</p>
+
+            <div style="background:#f5f3ff;padding:18px;border-radius:8px">
+              <p><strong>Student ID:</strong> ${studentId}</p>
+              <p><strong>Login Email:</strong> ${normalizedEmail}</p>
+              <p><strong>Temporary Password:</strong> ${password}</p>
+            </div>
+
+            <p>Please log in and change your password after your first login.</p>
+            <p>Keep your login credentials confidential.</p>
+            <p>Regards,<br/><strong>HM Dance Studio</strong></p>
+          </div>
+        `,
+      });
+
+      emailSent = true;
+    } catch (mailError) {
+      console.error("Admission Email Error:", mailError.message);
+      emailError = "Admission created, but credentials email could not be sent.";
+    }
+
     return res.status(201).json({
       success: true,
-      message: "Student admission created successfully",
+      message: emailSent
+        ? "Admission created and login credentials emailed successfully"
+        : "Admission created, but email could not be sent",
+      emailSent,
+      emailError,
       student: {
-        id: student._id,
-        studentId: student.studentId,
-        name: student.name,
-        email: student.email,
-        admissionDate: student.admissionDate,
+        id: createdStudent._id,
+        studentId: createdStudent.studentId,
+        name: createdStudent.name,
+        email: createdStudent.email,
+        admissionDate: createdStudent.admissionDate,
       },
     });
   } catch (error) {
-    // Roll back the user if student profile creation fails
+    // Remove partially created records if admission creation fails
+    if (createdStudent) {
+      await Student.findByIdAndDelete(createdStudent._id);
+    }
+
     if (createdUser) {
       await User.findByIdAndDelete(createdUser._id);
     }
@@ -135,6 +212,9 @@ const createStudent = async (req, res) => {
     });
   }
 };
+
+
+
 
 const getMyProfile = async (req, res) => {
   try {
