@@ -44,16 +44,33 @@ const Sidebar = ({ role, open, onClose }) => {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-[#111827] text-white transition-transform duration-300 lg:translate-x-0 ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-[#111827] text-white transition-transform duration-300 lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <div className="border-b border-white/10 px-6 py-6">
-          <h2 className="font-serif text-2xl font-bold text-[#d7b46b]">
+          <h2
+            className="font-serif text-2xl font-bold"
+            style={{
+              color: "#d7b46b",
+              background: "transparent",
+              lineHeight: "1.2",
+            }}
+          >
             HM Dance Studio
           </h2>
-          <p className="mt-1 text-xs uppercase tracking-widest text-gray-400">
-            {role} Portal
+
+          <p
+            className="mt-2 text-xs uppercase tracking-widest"
+            style={{
+              color: "#9ca3af",
+              background: "transparent",
+              display: "block",
+              opacity: 1,
+              visibility: "visible",
+              lineHeight: "1.5",
+            }}
+          >
+            {role === "admin" ? "Admin Portal" : "Student Portal"}
           </p>
         </div>
 
@@ -65,10 +82,9 @@ const Sidebar = ({ role, open, onClose }) => {
               end
               onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition ${
-                  isActive
-                    ? "bg-[#d7b46b] font-semibold text-gray-950"
-                    : "text-gray-300 hover:bg-white/10 hover:text-white"
+                `flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition ${isActive
+                  ? "bg-[#d7b46b] font-semibold text-gray-950"
+                  : "text-gray-300 hover:bg-white/10 hover:text-white"
                 }`
               }
             >

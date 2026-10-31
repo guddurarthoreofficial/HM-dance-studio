@@ -1,5 +1,6 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../../services/api";
 
 const formatCurrency = (amount) =>
@@ -27,8 +28,48 @@ const getDaysRemaining = (expiryDate) => {
   const expiry = new Date(expiryDate);
   expiry.setHours(0, 0, 0, 0);
 
-  return Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+  return Math.ceil(
+    (expiry - today) / (1000 * 60 * 60 * 24)
+  );
 };
+
+const quickLinks = [
+  {
+    title: "My Profile",
+    description: "View your personal information",
+    icon: "👤",
+    path: "/student/profile",
+    color: "bg-blue-50",
+  },
+  {
+    title: "My Packages",
+    description: "Check your dance packages",
+    icon: "💃",
+    path: "/student/packages",
+    color: "bg-purple-50",
+  },
+  {
+    title: "Payments",
+    description: "View transactions and receipts",
+    icon: "💳",
+    path: "/student/payments",
+    color: "bg-green-50",
+  },
+  {
+    title: "Certificates",
+    description: "View and download certificates",
+    icon: "🏆",
+    path: "/student/certificates",
+    color: "bg-amber-50",
+  },
+  {
+    title: "Settings",
+    description: "Manage your account password",
+    icon: "⚙️",
+    path: "/student/settings",
+    color: "bg-gray-100",
+  },
+];
 
 export default function Dashboard() {
   const [student, setStudent] = useState(null);
@@ -42,123 +83,185 @@ export default function Dashboard() {
 
   useEffect(() => {
     const loadDashboard = async () => {
-      setLoading(true);
-      setError("");
+      try {
+        setLoading(true);
+        setError("");
 
-      const results = await Promise.allSettled([
-        api.get("/students/me"),
-        api.get("/student-packages/my"),
-        api.get("/payments/history"),
-        api.get("/certificates/my"),
-      ]);
+        const results = await Promise.allSettled([
+          api.get("/students/me"),
+          api.get("/student-packages/my"),
+          api.get("/payments/history"),
+          api.get("/certificates/my"),
+        ]);
 
-      const [profileResult, packageResult, paymentResult, certificateResult] =
-        results;
+        const [
+          profileResult,
+          packageResult,
+          paymentResult,
+          certificateResult,
+        ] = results;
 
-      if (profileResult.status === "fulfilled") {
-        setStudent(profileResult.value.data.student);
+        if (profileResult.status === "fulfilled") {
+          setStudent(profileResult.value.data.student);
+        }
+
+        if (packageResult.status === "fulfilled") {
+          setPackages(packageResult.value.data.packages || []);
+        }
+
+        if (paymentResult.status === "fulfilled") {
+          setPayments(paymentResult.value.data.payments || []);
+        }
+
+        if (certificateResult.status === "fulfilled") {
+          setCertificates(
+            certificateResult.value.data.certificates || []
+          );
+        }
+
+        if (results.every((result) => result.status === "rejected")) {
+          setError(
+            "Unable to load dashboard. Please refresh the page."
+          );
+        }
+      } catch {
+        setError("Something went wrong while loading dashboard.");
+      } finally {
+        setLoading(false);
       }
-
-      if (packageResult.status === "fulfilled") {
-        setPackages(packageResult.value.data.packages || []);
-      }
-
-      if (paymentResult.status === "fulfilled") {
-        setPayments(paymentResult.value.data.payments || []);
-      }
-
-      if (certificateResult.status === "fulfilled") {
-        setCertificates(
-          certificateResult.value.data.certificates || []
-        );
-      }
-
-      if (results.every((result) => result.status === "rejected")) {
-        setError("Unable to load dashboard. Please refresh the page.");
-      }
-
-      setLoading(false);
     };
 
     loadDashboard();
   }, []);
 
-  const handleReceiptDownload = async (paymentId) => {
-    try {
-      setDownloading(paymentId);
+  // Calculate package status using expiry date
+  const packageStats = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-      const response = await api.get(
-        `/payments/${paymentId}/receipt`,
-        { responseType: "blob" }
-      );
+    const active = [];
+    const pending = [];
+    const expired = [];
 
-      const url = window.URL.createObjectURL(
-        new Blob([response.data], { type: "application/pdf" })
-      );
+    packages.forEach((item) => {
+      if (item.status === "pending") {
+        pending.push(item);
+        return;
+      }
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `HMDS-Receipt-${paymentId}.pdf`;
+      if (item.status === "active") {
+        if (item.expiryDate) {
+          const expiry = new Date(item.expiryDate);
+          expiry.setHours(0, 0, 0, 0);
 
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+          if (expiry < today) {
+            expired.push(item);
+          } else {
+            active.push(item);
+          }
+        } else {
+          active.push(item);
+        }
+      } else if (item.status === "expired") {
+        expired.push(item);
+      }
+    });
 
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      alert("Unable to download payment receipt.");
-    } finally {
-      setDownloading("");
-    }
-  };
+    return { active, pending, expired };
+  }, [packages]);
 
-  const handleCertificateDownload = async (certificateId) => {
-    try {
-      setDownloading(certificateId);
-
-      const response = await api.get(
-        `/certificates/${certificateId}/download`,
-        { responseType: "blob" }
-      );
-
-      const url = window.URL.createObjectURL(
-        new Blob([response.data], { type: "application/pdf" })
-      );
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `HMDS-Certificate-${certificateId}.pdf`;
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      alert("Unable to download certificate.");
-    } finally {
-      setDownloading("");
-    }
-  };
-
-  const activePackages = packages.filter(
-    (item) => item.status === "active"
-  );
-
-  const pendingPackages = packages.filter(
-    (item) => item.status === "pending"
-  );
+  const activePackage = useMemo(() => {
+    return [...packageStats.active].sort(
+      (a, b) =>
+        new Date(a.expiryDate || 0) -
+        new Date(b.expiryDate || 0)
+    )[0];
+  }, [packageStats.active]);
 
   const totalPaid = payments.reduce(
     (total, payment) => total + Number(payment.amount || 0),
     0
   );
 
-  const activePackage = activePackages[0];
+  const recentPayments = [...payments]
+    .sort(
+      (a, b) =>
+        new Date(b.paymentDate) - new Date(a.paymentDate)
+    )
+    .slice(0, 5);
+
+  const recentCertificates = [...certificates]
+    .sort(
+      (a, b) =>
+        new Date(b.completionDate) -
+        new Date(a.completionDate)
+    )
+    .slice(0, 3);
+
+  const handleDownload = async (type, item) => {
+    const id = item._id;
+    const key = `${type}-${id}`;
+
+    try {
+      setDownloading(key);
+
+      const endpoint =
+        type === "receipt"
+          ? `/payments/${id}/receipt`
+          : `/certificates/${id}/download`;
+
+      const response = await api.get(endpoint, {
+        responseType: "blob",
+      });
+
+      const blob = new Blob([response.data], {
+        type: "application/pdf",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+
+      const fileNumber =
+        type === "receipt"
+          ? item.receiptNumber || id
+          : item.certificateNumber || id;
+
+      link.download = `HMDS-${type === "receipt" ? "Receipt" : "Certificate"}-${fileNumber}.pdf`;
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 1000);
+    } catch (err) {
+      let message = `Unable to download ${type}.`;
+
+      if (err.response?.data instanceof Blob) {
+        try {
+          const errorText = await err.response.data.text();
+          const parsed = JSON.parse(errorText);
+          message = parsed.message || message;
+        } catch {
+          // Keep default message.
+        }
+      } else {
+        message = err.response?.data?.message || message;
+      }
+
+      console.error("Download Error:", err);
+      alert(message);
+    } finally {
+      setDownloading("");
+    }
+  };
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="dashboard-shell flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
           <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-purple-200 border-t-purple-700" />
           <p className="mt-4 text-sm text-gray-500">
@@ -170,31 +273,40 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="dashboard-shell min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="dashboard-shell min-h-screen space-y-8 bg-gray-50 p-4 md:p-8">
       <div className="mx-auto max-w-7xl">
 
-        {/* Welcome */}
-        <div className="mb-8 rounded-2xl bg-gradient-to-r from-purple-800 to-indigo-700 p-6 text-white shadow-lg md:p-8">
-          <p className="text-sm font-medium text-purple-200">
-            STUDENT PORTAL
-          </p>
+        {/* Welcome Section */}
+        <section className="mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-purple-900 via-purple-800 to-indigo-800 p-6 text-white shadow-lg md:p-8">
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+            <div>
+              <p className="text-xs font-semibold tracking-widest text-purple-200">
+                HM DANCE STUDIO · STUDENT PORTAL
+              </p>
 
-          <h1 className="mt-2 text-2xl font-bold md:text-3xl">
-            Welcome back, {student?.name || "Student"}!
-          </h1>
+              <h1 className="mt-3 text-2xl font-bold md:text-3xl">
+                Welcome back, {student?.name || "Student"}!
+              </h1>
 
-          <p className="mt-2 text-sm text-purple-100">
-            Welcome to HM Dance Studio. Track your courses, payments
-            and certificates here.
-          </p>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-purple-100">
+                Keep learning, improving and performing.
+                Manage your courses, payments and achievements
+                from your personal dashboard.
+              </p>
 
-          <div className="mt-5 inline-flex rounded-lg bg-white/15 px-4 py-2 text-sm">
-            Student ID:{" "}
-            <strong className="ml-2">
-              {student?.studentId || "—"}
-            </strong>
+              <div className="mt-5 inline-flex rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm">
+                Student ID:
+                <strong className="ml-2">
+                  {student?.studentId || "—"}
+                </strong>
+              </div>
+            </div>
+
+            <div className="hidden text-7xl md:block">
+              💃
+            </div>
           </div>
-        </div>
+        </section>
 
         {error && (
           <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
@@ -203,26 +315,35 @@ export default function Dashboard() {
         )}
 
         {/* Statistics */}
-        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
             <p className="text-sm text-gray-500">Active Courses</p>
             <h2 className="mt-2 text-3xl font-bold text-purple-700">
-              {activePackages.length}
+              {packageStats.active.length}
             </h2>
+            <p className="mt-1 text-xs text-gray-400">
+              Currently running
+            </p>
           </div>
 
           <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
             <p className="text-sm text-gray-500">Pending Packages</p>
-            <h2 className="mt-2 text-3xl font-bold text-yellow-600">
-              {pendingPackages.length}
+            <h2 className="mt-2 text-3xl font-bold text-amber-600">
+              {packageStats.pending.length}
             </h2>
+            <p className="mt-1 text-xs text-gray-400">
+              Awaiting payment
+            </p>
           </div>
 
           <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">Total Paid</p>
+            <p className="text-sm text-gray-500">Total Amount Paid</p>
             <h2 className="mt-2 text-2xl font-bold text-green-600">
               {formatCurrency(totalPaid)}
             </h2>
+            <p className="mt-1 text-xs text-gray-400">
+              Recorded payments
+            </p>
           </div>
 
           <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -230,18 +351,68 @@ export default function Dashboard() {
             <h2 className="mt-2 text-3xl font-bold text-indigo-600">
               {certificates.length}
             </h2>
+            <p className="mt-1 text-xs text-gray-400">
+              Achievements earned
+            </p>
           </div>
-        </div>
+        </section>
 
-        {/* Active Course */}
+        {/* Quick Access */}
         <section className="mb-8">
           <div className="mb-4">
             <h2 className="text-xl font-bold text-gray-900">
-              My Active Course
+              Quick Access
             </h2>
             <p className="mt-1 text-sm text-gray-500">
-              Your currently running dance package.
+              Quickly access your student account.
             </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+            {quickLinks.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="group rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-purple-200 hover:shadow-md"
+              >
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl text-2xl ${item.color}`}>
+                  {item.icon}
+                </div>
+
+                <h3 className="mt-4 font-bold text-gray-900 group-hover:text-purple-700">
+                  {item.title}
+                </h3>
+
+                <p className="mt-1 text-xs leading-5 text-gray-500">
+                  {item.description}
+                </p>
+
+                <p className="mt-4 text-xs font-semibold text-purple-700">
+                  Open page →
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Active Course */}
+        <section className="mb-8">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">
+                My Active Course
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Your currently running dance package.
+              </p>
+            </div>
+
+            <Link
+              to="/student/packages"
+              className="text-sm font-semibold text-purple-700 hover:underline"
+            >
+              View All →
+            </Link>
           </div>
 
           {activePackage ? (
@@ -261,7 +432,7 @@ export default function Dashboard() {
                   </p>
                 </div>
 
-                <div className="text-left sm:text-right">
+                <div>
                   <p className="text-sm text-gray-500">Package Fee</p>
                   <p className="mt-1 text-2xl font-bold text-purple-700">
                     {formatCurrency(activePackage.totalFees)}
@@ -297,7 +468,11 @@ export default function Dashboard() {
 
                 return (
                   <div className="mt-5 rounded-lg bg-purple-50 p-4">
-                    {days > 0 ? (
+                    {days === null ? (
+                      <p className="text-sm text-purple-800">
+                        Package expiry date is not available.
+                      </p>
+                    ) : days > 0 ? (
                       <p className="text-sm font-semibold text-purple-800">
                         {days} days remaining in your course.
                       </p>
@@ -316,30 +491,37 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-              <h3 className="font-semibold text-gray-800">
+              <div className="text-4xl">💃</div>
+              <h3 className="mt-3 font-semibold text-gray-800">
                 No active course
               </h3>
               <p className="mt-2 text-sm text-gray-500">
                 Contact HM Dance Studio to get started with a dance package.
               </p>
+              <Link
+                to="/student/packages"
+                className="mt-4 inline-block text-sm font-semibold text-purple-700 hover:underline"
+              >
+                View My Packages →
+              </Link>
             </div>
           )}
         </section>
 
         {/* Pending Packages */}
-        {pendingPackages.length > 0 && (
+        {packageStats.pending.length > 0 && (
           <section className="mb-8">
             <h2 className="mb-4 text-xl font-bold text-gray-900">
               Pending Packages
             </h2>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {pendingPackages.map((item) => (
+              {packageStats.pending.map((item) => (
                 <div
                   key={item._id}
-                  className="rounded-xl border border-yellow-200 bg-white p-5 shadow-sm"
+                  className="rounded-xl border border-amber-200 bg-white p-5 shadow-sm"
                 >
-                  <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800">
+                  <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
                     Payment Pending
                   </span>
 
@@ -364,18 +546,27 @@ export default function Dashboard() {
           </section>
         )}
 
-        {/* Payment History */}
+        {/* Recent Payments */}
         <section className="mb-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-100 p-5">
-            <h2 className="text-xl font-bold text-gray-900">
-              Recent Payments
-            </h2>
-            <p className="mt-1 text-sm text-gray-500">
-              Your latest payment transactions.
-            </p>
+          <div className="flex items-center justify-between border-b border-gray-100 p-5">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">
+                Recent Payments
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Your latest payment transactions.
+              </p>
+            </div>
+
+            <Link
+              to="/student/payments"
+              className="text-sm font-semibold text-purple-700 hover:underline"
+            >
+              View All →
+            </Link>
           </div>
 
-          {payments.length === 0 ? (
+          {recentPayments.length === 0 ? (
             <div className="p-8 text-center text-sm text-gray-500">
               No payment history available.
             </div>
@@ -393,13 +584,13 @@ export default function Dashboard() {
                 </thead>
 
                 <tbody className="divide-y divide-gray-100">
-                  {payments.slice(0, 5).map((payment) => (
+                  {recentPayments.map((payment) => (
                     <tr key={payment._id}>
                       <td className="px-5 py-4 text-sm font-semibold text-gray-900">
-                        {payment.receiptNumber}
+                        {payment.receiptNumber || "—"}
                       </td>
 
-                      <td className="px-5 py-4 text-sm font-semibold text-gray-900">
+                      <td className="px-5 py-4 text-sm font-semibold text-green-700">
                         {formatCurrency(payment.amount)}
                       </td>
 
@@ -414,15 +605,13 @@ export default function Dashboard() {
                       <td className="px-5 py-4">
                         <button
                           type="button"
-                          disabled={downloading === payment._id}
-                          onClick={() =>
-                            handleReceiptDownload(payment._id)
-                          }
+                          disabled={downloading === `receipt-${payment._id}`}
+                          onClick={() => handleDownload("receipt", payment)}
                           className="rounded-lg border border-purple-200 px-3 py-2 text-xs font-semibold text-purple-700 hover:bg-purple-50 disabled:opacity-50"
                         >
-                          {downloading === payment._id
+                          {downloading === `receipt-${payment._id}`
                             ? "Downloading..."
-                            : "Download"}
+                            : "↓ Download"}
                         </button>
                       </td>
                     </tr>
@@ -433,25 +622,33 @@ export default function Dashboard() {
           )}
         </section>
 
-        {/* Certificates */}
+        {/* Recent Certificates */}
         <section className="mb-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-          <div className="border-b border-gray-100 p-5">
-            <h2 className="text-xl font-bold text-gray-900">
-              My Certificates
-            </h2>
+          <div className="flex items-center justify-between border-b border-gray-100 p-5">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">
+                Recent Certificates
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Your dance course achievements.
+              </p>
+            </div>
 
-            <p className="mt-1 text-sm text-gray-500">
-              Your dance course completion certificates.
-            </p>
+            <Link
+              to="/student/certificates"
+              className="text-sm font-semibold text-purple-700 hover:underline"
+            >
+              View All →
+            </Link>
           </div>
 
-          {certificates.length === 0 ? (
+          {recentCertificates.length === 0 ? (
             <div className="p-8 text-center text-sm text-gray-500">
               No certificates available yet.
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
-              {certificates.map((certificate) => (
+              {recentCertificates.map((certificate) => (
                 <div
                   key={certificate._id}
                   className="flex flex-wrap items-center justify-between gap-4 p-5"
@@ -473,15 +670,13 @@ export default function Dashboard() {
 
                   <button
                     type="button"
-                    disabled={downloading === certificate._id}
-                    onClick={() =>
-                      handleCertificateDownload(certificate._id)
-                    }
+                    disabled={downloading === `certificate-${certificate._id}`}
+                    onClick={() => handleDownload("certificate", certificate)}
                     className="rounded-lg bg-purple-700 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800 disabled:opacity-50"
                   >
-                    {downloading === certificate._id
+                    {downloading === `certificate-${certificate._id}`
                       ? "Downloading..."
-                      : "Download Certificate"}
+                      : "↓ Download Certificate"}
                   </button>
                 </div>
               ))}
@@ -491,9 +686,23 @@ export default function Dashboard() {
 
         {/* Profile Summary */}
         <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-bold text-gray-900">
-            My Profile
-          </h2>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">
+                My Profile
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Your registered student information.
+              </p>
+            </div>
+
+            <Link
+              to="/student/profile"
+              className="text-sm font-semibold text-purple-700 hover:underline"
+            >
+              View Profile →
+            </Link>
+          </div>
 
           <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <div>
@@ -505,7 +714,7 @@ export default function Dashboard() {
 
             <div>
               <p className="text-xs text-gray-500">Email Address</p>
-              <p className="mt-1 font-semibold text-gray-900">
+              <p className="mt-1 break-all font-semibold text-gray-900">
                 {student?.email || "—"}
               </p>
             </div>
@@ -543,6 +752,11 @@ export default function Dashboard() {
             Profile details are managed by HM Dance Studio administration.
           </p>
         </section>
+
+        {/* Footer */}
+        <div className="mt-8 text-center text-xs text-gray-400">
+          HM Dance Studio · Where passion becomes performance.
+        </div>
       </div>
     </div>
   );

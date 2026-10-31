@@ -143,7 +143,7 @@
   letter-spacing: -0.025em;
 }
 
-.hm-nav__brand-text strong > span {
+.hm-nav__brand-text strong>span {
   color: var(--nav-gold);
   font-style: italic;
 }
@@ -244,12 +244,10 @@
 .hm-nav__join::before {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    110deg,
-    transparent 20%,
-    rgb(255 255 255 / 16%) 50%,
-    transparent 80%
-  );
+  background: linear-gradient(110deg,
+      transparent 20%,
+      rgb(255 255 255 / 16%) 50%,
+      transparent 80%);
   transform: translateX(-120%);
   transition: transform 600ms ease;
   content: "";
@@ -320,6 +318,7 @@
     transform: translate3d(-48px, 0, 0);
     filter: blur(5px);
   }
+
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -332,6 +331,7 @@
     opacity: 0;
     transform: translate3d(-18px, 0, 0);
   }
+
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -343,6 +343,7 @@
     opacity: 0;
     transform: translate3d(18px, 0, 0);
   }
+
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -651,6 +652,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .hm-nav *,
   .hm-nav *::before,
   .hm-nav *::after {
@@ -658,5 +660,83 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0s !important;
+  }
+}
+
+
+
+/* Login Button - Desktop */
+
+.hm-nav__login {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 17px;
+  border: 1px solid rgb(215 180 107 / 55%);
+  color: var(--nav-gold);
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease;
+}
+
+.hm-nav__login:hover {
+  border-color: var(--nav-gold);
+  background: var(--nav-gold);
+  color: var(--nav-bg);
+}
+
+.hm-nav__login-icon {
+  font-size: 15px;
+}
+
+.hm-nav__mobile-login {
+  display: none;
+}
+
+/* Responsive Login */
+
+@media (max-width: 1200px) {
+  .hm-nav__login {
+    padding: 11px 13px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hm-nav__login {
+    display: none;
+  }
+
+  .hm-nav__mobile-login {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 25px;
+    padding: 16px 18px;
+    border: 1px solid rgb(215 180 107 / 50%);
+    color: var(--nav-gold);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 250ms ease, color 250ms ease;
+  }
+
+  .hm-nav__mobile-login:hover {
+    background: var(--nav-gold);
+    color: #090807;
+  }
+
+  .hm-nav__mobile-login span {
+    font-size: 17px;
   }
 }

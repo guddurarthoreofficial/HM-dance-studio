@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -35,7 +36,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /* Close the drawer if the screen grows to desktop size */
   useEffect(() => {
     const query = window.matchMedia("(min-width: 901px)");
     const handleChange = (event) => {
@@ -75,7 +75,6 @@ export default function Navbar() {
         .filter(Boolean)
         .join(" ")}
     >
-      {/* Tap outside the drawer to close it (mobile only) */}
       <button
         type="button"
         className={`hm-nav__backdrop ${menuOpen ? "is-visible" : ""}`}
@@ -96,7 +95,9 @@ export default function Navbar() {
           </span>
 
           <span className="hm-nav__brand-text">
-            <span className="hm-nav__brand-overline">WHERE PASSION MEETS ART</span>
+            <span className="hm-nav__brand-overline">
+              WHERE PASSION MEETS ART
+            </span>
             <strong>
               HM <span>Dance Studio</span>
             </strong>
@@ -108,7 +109,9 @@ export default function Navbar() {
           className={`hm-nav__links ${menuOpen ? "hm-nav__links--open" : ""}`}
           aria-label="Main navigation"
         >
-          <span className="hm-nav__mobile-heading">Explore the studio</span>
+          <span className="hm-nav__mobile-heading">
+            Explore the studio
+          </span>
 
           {links.map((link, index) => (
             <NavLink
@@ -131,6 +134,15 @@ export default function Navbar() {
             </NavLink>
           ))}
 
+          {/* Mobile Login */}
+          <Link
+            to="/login"
+            className="hm-nav__mobile-login"
+            onClick={closeMenu}
+          >
+            Student / Admin Login <span>→</span>
+          </Link>
+
           <a
             href={REGISTER_URL}
             target="_blank"
@@ -145,6 +157,12 @@ export default function Navbar() {
             Where passion becomes performance.
           </span>
         </nav>
+
+        {/* Desktop Login */}
+        <Link to="/login" className="hm-nav__login">
+          <span className="hm-nav__login-icon">↗</span>
+          Login
+        </Link>
 
         <a
           href={REGISTER_URL}
