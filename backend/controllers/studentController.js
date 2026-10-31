@@ -180,6 +180,7 @@ const getAllStudents = async (req, res) => {
   try {
     const students = await Student.find()
       .select("-aadhaarNumber")
+      .populate("user", "isActive")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -268,13 +269,24 @@ const updateStudent = async (req, res) => {
       });
     }
 
-    if (updates.aadhaarNumber && !/^\d{12}$/.test(updates.aadhaarNumber)) {
+    // Normalize text fields
+    if (updates.name) updates.name = updates.name.trim();
+    if (updates.email) {
+      updates.email = updates.email.trim().toLowerCase();
+    }
+
+    // Validate Aadhaar
+    if (
+      updates.aadhaarNumber &&
+      !/^\d{12}$/.test(updates.aadhaarNumber)
+    ) {
       return res.status(400).json({
         success: false,
         message: "Invalid Aadhaar number",
       });
     }
 
+    // Validate mobile numbers
     if (updates.phone && !/^\d{10}$/.test(updates.phone)) {
       return res.status(400).json({
         success: false,
@@ -282,18 +294,18 @@ const updateStudent = async (req, res) => {
       });
     }
 
-    if (updates.parentPhone && !/^\d{10}$/.test(updates.parentPhone)) {
+    if (
+      updates.parentPhone &&
+      !/^\d{10}$/.test(updates.parentPhone)
+    ) {
       return res.status(400).json({
         success: false,
         message: "Invalid parent mobile number",
       });
     }
 
-    const student = await Student.findOneAndUpdate(
-      { studentId },
-      { $set: updates },
-      { new: true, runValidators: true },
-    );
+    // Find student first
+    const student = await Student.findOne({ studentId });
 
     if (!student) {
       return res.status(404).json({
@@ -302,38 +314,63 @@ const updateStudent = async (req, res) => {
       });
     }
 
-    // Keep the linked login account in sync
-    const userUpdates = {};
+    // Find linked user
+    const user = await User.findById(student.user);
 
-    if (updates.name) userUpdates.name = updates.name;
-    if (updates.email) {
-      const normalizedEmail = updates.email.trim().toLowerCase();
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Student login account not found",
+      });
+    }
 
-      const existing = await User.findOne({
-        email: normalizedEmail,
-        _id: { $ne: student.user },
+    // Check duplicate email BEFORE updating anything
+    if (updates.email && updates.email !== user.email) {
+      const existingUser = await User.findOne({
+        email: updates.email,
+        _id: { $ne: user._id },
       });
 
-      if (existing) {
+      if (existingUser) {
         return res.status(409).json({
           success: false,
           message: "Email already registered",
         });
       }
-
-      userUpdates.email = normalizedEmail;
-      student.email = normalizedEmail;
-      await student.save();
     }
 
-    if (Object.keys(userUpdates).length > 0) {
-      await User.findByIdAndUpdate(student.user, { $set: userUpdates });
+    // Update linked User account
+    if (updates.name !== undefined) {
+      user.name = updates.name;
     }
+
+    if (updates.email !== undefined) {
+      user.email = updates.email;
+    }
+
+    // Update Student profile
+    Object.assign(student, updates);
+
+    await user.save();
+    await student.save();
 
     return res.status(200).json({
       success: true,
       message: "Student updated successfully",
-      student,
+      student: {
+        studentId: student.studentId,
+        name: student.name,
+        email: student.email,
+        fatherName: student.fatherName,
+        motherName: student.motherName,
+        dateOfBirth: student.dateOfBirth,
+        gender: student.gender,
+        phone: student.phone,
+        parentPhone: student.parentPhone,
+        presentAddress: student.presentAddress,
+        permanentAddress: student.permanentAddress,
+        admissionDate: student.admissionDate,
+      },
     });
   } catch (error) {
     console.error("Update Student Error:", error);
@@ -397,6 +434,35 @@ const updateStudentStatus = async (req, res) => {
   }
 };
 
+const getStudentById = async (req, res) => {
+  try {
+    const student = await Student.findOne({
+      studentId: req.params.studentId,
+    })
+      .select("-aadhaarNumber")
+      .populate("user", "name email isActive");
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      student,
+    });
+  } catch (error) {
+    console.error("Get Student Details Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch student details",
+    });
+  }
+};
+
 module.exports = {
   createStudent,
   getMyProfile,
@@ -404,4 +470,5 @@ module.exports = {
   searchStudents,
   updateStudent,
   updateStudentStatus,
+  getStudentById,
 };

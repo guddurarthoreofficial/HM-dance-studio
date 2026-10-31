@@ -23,6 +23,7 @@ import StudentLayout from "./layouts/StudentLayout";
 
 import AdminDashboard from "./pages/admin/Dashboard";
 import StudentDashboard from "./pages/student/Dashboard";
+import Students from "./pages/admin/Students";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -105,6 +106,7 @@ function AppRoutes() {
               element={<Navigate to="dashboard" replace />}
             />
             <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="students" element={<Students />} />
           </Route>
         </Route>
 

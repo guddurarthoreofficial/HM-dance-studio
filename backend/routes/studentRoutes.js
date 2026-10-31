@@ -6,28 +6,34 @@ const {
   getMyProfile,
   getAllStudents,
   searchStudents,
+  getStudentById,
   updateStudent,
   updateStudentStatus,
 } = require("../controllers/studentController");
 
 const { protect, authorize } = require("../middleware/authMiddleware");
 
+// Admission
 router.post("/admission", protect, authorize("admin"), createStudent);
-// Student can view only their own profile
+
+// Student profile
 router.get("/me", protect, authorize("student"), getMyProfile);
 
-// Admin: All students
+// Admin: Student listing and search
 router.get("/", protect, authorize("admin"), getAllStudents);
-
-// Admin: Search students
 router.get("/search", protect, authorize("admin"), searchStudents);
 
+// Admin: Individual student details
+router.get("/:studentId", protect, authorize("admin"), getStudentById);
+
+// Admin: Update and block/unblock
 router.put("/:studentId", protect, authorize("admin"), updateStudent);
+
 router.patch(
   "/:studentId/status",
   protect,
   authorize("admin"),
-  updateStudentStatus,
+  updateStudentStatus
 );
 
 module.exports = router;
