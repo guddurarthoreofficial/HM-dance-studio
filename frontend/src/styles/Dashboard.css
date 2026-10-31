@@ -1,0 +1,79 @@
+
+/* Dashboard theme isolation */
+.dashboard-shell {
+  min-height: 100vh;
+  color: #1f2937;
+  color-scheme: light;
+  background: #f9fafb;
+}
+
+.dashboard-shell h1,
+.dashboard-shell h2,
+.dashboard-shell h3,
+.dashboard-shell p,
+.dashboard-shell span,
+.dashboard-shell label {
+  -webkit-text-fill-color: currentColor;
+}
+
+.dashboard-shell h1,
+.dashboard-shell h2,
+.dashboard-shell h3 {
+  color: #111827;
+  background: transparent;
+}
+
+/* Dashboard form controls */
+.dashboard-shell input,
+.dashboard-shell textarea,
+.dashboard-shell select {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+  border-color: #d1d5db;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+.dashboard-shell input::placeholder,
+.dashboard-shell textarea::placeholder {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+}
+
+.dashboard-shell button {
+  color: inherit;
+}
+
+/* Dashboard header */
+.dashboard-shell header {
+  color: #111827;
+  background: #ffffff;
+}
+
+
+
+/* Login page theme isolation */
+.auth-page {
+  color: #111827;
+  color-scheme: light;
+}
+
+.auth-page h1,
+.auth-page p,
+.auth-page label {
+  color: #111827;
+}
+
+.auth-page input {
+  color: #111827 !important;
+  background-color: #ffffff !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+.auth-page input::placeholder {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+}
+
+.auth-page button {
+  color: #ffffff;
+}
