@@ -22,13 +22,16 @@ import AdminLayout from "./layouts/AdminLayout";
 import StudentLayout from "./layouts/StudentLayout";
 
 import AdminDashboard from "./pages/admin/Dashboard";
-import StudentDashboard from "./pages/student/Dashboard";
 import Students from "./pages/admin/Students";
 import StudentDetails from "./pages/admin/StudentDetails";
 import Admissions from "./pages/admin/Admissions";
 import Courses from "./pages/admin/Courses";
 import Packages from "./pages/admin/Packages";
 import Payments from "./pages/admin/Payments";
+
+
+import StudentDashboard from "./pages/student/Dashboard";
+import StudentProfile from "./pages/student/Profile";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -131,6 +134,7 @@ function AppRoutes() {
               element={<Navigate to="dashboard" replace />}
             />
             <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="profile" element={<StudentProfile />} />
           </Route>
         </Route>
 
