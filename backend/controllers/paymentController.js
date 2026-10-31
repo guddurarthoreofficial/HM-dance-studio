@@ -230,10 +230,11 @@ const getPaymentHistory = async (req, res) => {
 };
 
 // Download payment receipt PDF
+
 const downloadReceipt = async (req, res) => {
   try {
     const payment = await Payment.findById(req.params.paymentId)
-      .populate("student", "name studentId email")
+      .populate("student", "name studentId email user")
       .populate("studentPackage");
 
     if (!payment) {
@@ -243,19 +244,32 @@ const downloadReceipt = async (req, res) => {
       });
     }
 
-    // Student can download only their own receipt
-    if (
-      req.user.role === "student" &&
-      payment.student.user.toString() !== req.user._id.toString()
-    ) {
-      return res.status(403).json({
+    const student = payment.student;
+    const studentPackage = payment.studentPackage;
+
+    if (!student || !studentPackage) {
+      return res.status(404).json({
         success: false,
-        message: "You are not authorized to download this receipt",
+        message: "Student or package record not found",
       });
     }
 
-    const student = payment.student;
-    const studentPackage = payment.studentPackage;
+    // Student can download only their own receipt
+    if (req.user.role === "student") {
+      if (!student.user) {
+        return res.status(403).json({
+          success: false,
+          message: "Student account link not found",
+        });
+      }
+
+      if (student.user.toString() !== req.user._id.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: "You are not authorized to download this receipt",
+        });
+      }
+    }
 
     const pdfBuffer = await generateReceipt({
       receiptNumber: payment.receiptNumber,
@@ -277,7 +291,7 @@ const downloadReceipt = async (req, res) => {
 
     return res.send(pdfBuffer);
   } catch (error) {
-    console.error("Receipt Download Error:", error.message);
+    console.error("Receipt Download Error:", error);
 
     return res.status(500).json({
       success: false,
