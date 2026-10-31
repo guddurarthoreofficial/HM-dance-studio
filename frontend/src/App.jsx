@@ -35,6 +35,7 @@ import StudentProfile from "./pages/student/Profile";
 import StudentSettings from "./pages/student/Settings";
 import StudentPackages from "./pages/student/Packages";
 import StudentPayments from "./pages/student/Payments";
+import StudentCertificates from "./pages/student/Certificates";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -141,6 +142,10 @@ function AppRoutes() {
             <Route path="settings" element={<StudentSettings />} />
             <Route path="packages" element={<StudentPackages />} />
             <Route path="payments" element={<StudentPayments />} />
+            <Route
+              path="certificates"
+              element={<StudentCertificates />}
+            />
           </Route>
         </Route>
 
