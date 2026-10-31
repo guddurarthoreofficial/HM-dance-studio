@@ -33,6 +33,7 @@ import Payments from "./pages/admin/Payments";
 import StudentDashboard from "./pages/student/Dashboard";
 import StudentProfile from "./pages/student/Profile";
 import StudentSettings from "./pages/student/Settings";
+import StudentPackages from "./pages/student/Packages";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -137,6 +138,7 @@ function AppRoutes() {
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="profile" element={<StudentProfile />} />
             <Route path="settings" element={<StudentSettings />} />
+            <Route path="packages" element={<StudentPackages />} />
           </Route>
         </Route>
 
