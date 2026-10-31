@@ -3,6 +3,7 @@ const Student = require("../models/Student");
 const Course = require("../models/Course");
 const StudentPackage = require("../models/StudentPackage");
 
+// Admin: Assign package to student
 const assignPackage = async (req, res) => {
   try {
     const { studentId, courseId } = req.body;
@@ -10,7 +11,7 @@ const assignPackage = async (req, res) => {
     if (!studentId || !courseId) {
       return res.status(400).json({
         success: false,
-        message: "Student ID and Course ID are required"
+        message: "Student ID and Course ID are required",
       });
     }
 
@@ -19,31 +20,31 @@ const assignPackage = async (req, res) => {
     if (!student) {
       return res.status(404).json({
         success: false,
-        message: "Student not found"
+        message: "Student not found",
       });
     }
 
     const course = await Course.findOne({
       _id: courseId,
-      isActive: true
+      isActive: true,
     });
 
     if (!course) {
       return res.status(404).json({
         success: false,
-        message: "Active course package not found"
+        message: "Active course package not found",
       });
     }
 
     const existingPending = await StudentPackage.findOne({
       student: student._id,
-      status: "pending"
+      status: "pending",
     });
 
     if (existingPending) {
       return res.status(409).json({
         success: false,
-        message: "Student already has a pending package"
+        message: "Student already has a pending package",
       });
     }
 
@@ -56,26 +57,25 @@ const assignPackage = async (req, res) => {
       totalFees: course.totalFees,
       paymentStatus: "unpaid",
       status: "pending",
-      assignedBy: req.user._id
+      assignedBy: req.user._id,
     });
 
     return res.status(201).json({
       success: true,
       message: "Course package assigned. Payment is pending.",
-      package: studentPackage
+      package: studentPackage,
     });
-
   } catch (error) {
     console.error("Assign Package Error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Unable to assign course package"
+      message: "Unable to assign course package",
     });
   }
 };
 
-
+// Admin: Get packages of a particular student
 const getStudentPackages = async (req, res) => {
   try {
     const { studentId } = req.params;
@@ -110,8 +110,43 @@ const getStudentPackages = async (req, res) => {
   }
 };
 
+// Student: Get only their own packages
+const getMyPackages = async (req, res) => {
+  try {
+    const student = await Student.findOne({
+      user: req.user._id,
+    });
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student profile not found",
+      });
+    }
+
+    const packages = await StudentPackage.find({
+      student: student._id,
+    })
+      .populate("course", "packageName danceStyle durationMonths totalFees")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: packages.length,
+      packages,
+    });
+  } catch (error) {
+    console.error("My Packages Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch your packages",
+    });
+  }
+};
 
 module.exports = {
   assignPackage,
   getStudentPackages,
+  getMyPackages,
 };

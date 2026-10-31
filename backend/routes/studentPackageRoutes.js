@@ -5,10 +5,15 @@ const router = express.Router();
 const {
   assignPackage,
   getStudentPackages,
+  getMyPackages,
 } = require("../controllers/studentPackageController");
 
-const { protect, authorize } = require("../middleware/authMiddleware");
+const {
+  protect,
+  authorize,
+} = require("../middleware/authMiddleware");
 
+// Admin: Assign package
 router.post(
   "/assign",
   protect,
@@ -16,6 +21,15 @@ router.post(
   assignPackage
 );
 
+// Student: Get own packages
+router.get(
+  "/my",
+  protect,
+  authorize("student"),
+  getMyPackages
+);
+
+// Admin: Get packages of a particular student
 router.get(
   "/student/:studentId",
   protect,
