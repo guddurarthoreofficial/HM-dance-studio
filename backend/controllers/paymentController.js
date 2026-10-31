@@ -180,8 +180,7 @@ const recordPayment = async (req, res) => {
         expiryDate: studentPackage.expiryDate,
         status: studentPackage.status,
       },
-    }); 
-
+    });
   } catch (error) {
     console.error("Record Payment Error:", error);
 
@@ -191,8 +190,6 @@ const recordPayment = async (req, res) => {
     });
   }
 };
-
-
 
 // Get payment history
 const getPaymentHistory = async (req, res) => {
@@ -231,7 +228,6 @@ const getPaymentHistory = async (req, res) => {
     });
   }
 };
-
 
 // Download payment receipt PDF
 const downloadReceipt = async (req, res) => {
@@ -276,7 +272,7 @@ const downloadReceipt = async (req, res) => {
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="${payment.receiptNumber}.pdf"`
+      `attachment; filename="${payment.receiptNumber}.pdf"`,
     );
 
     return res.send(pdfBuffer);
@@ -290,9 +286,53 @@ const downloadReceipt = async (req, res) => {
   }
 };
 
+const getStudentPayments = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+
+    const student = await Student.findOne({ studentId });
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    const payments = await Payment.find({
+      student: student._id,
+    })
+      .populate("student", "name studentId email")
+      .populate(
+        "studentPackage",
+        "packageName danceStyle durationMonths totalFees startDate expiryDate",
+      )
+      .sort({ paymentDate: -1 });
+
+    const totalPaid = payments.reduce(
+      (total, payment) => total + payment.amount,
+      0,
+    );
+
+    return res.status(200).json({
+      success: true,
+      count: payments.length,
+      totalPaid,
+      payments,
+    });
+  } catch (error) {
+    console.error("Student Payment History Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch student payment history",
+    });
+  }
+};
 
 module.exports = {
   recordPayment,
   getPaymentHistory,
+  getStudentPayments,
   downloadReceipt,
 };

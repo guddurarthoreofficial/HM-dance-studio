@@ -219,10 +219,45 @@ const downloadCertificate = async (req, res) => {
   }
 };
 
+const getStudentCertificates = async (req, res) => {
+  try {
+    const student = await Student.findOne({
+      studentId: req.params.studentId,
+    });
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    const certificates = await Certificate.find({
+      student: student._id,
+    })
+      .populate("studentPackage", "packageName danceStyle durationMonths")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: certificates.length,
+      certificates,
+    });
+  } catch (error) {
+    console.error("Student Certificates Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch student certificates",
+    });
+  }
+};
+
 
 module.exports = {
   createCertificate,
   getAllCertificates,
   getMyCertificates,
+  getStudentCertificates,
   downloadCertificate,
 };

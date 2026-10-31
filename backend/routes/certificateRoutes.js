@@ -6,6 +6,7 @@ const {
   getAllCertificates,
   getMyCertificates,
   downloadCertificate,
+  getStudentCertificates,
 } = require("../controllers/certificateController");
 
 const { protect, authorize } = require("../middleware/authMiddleware");
@@ -21,6 +22,13 @@ router.get(
   protect,
   authorize("admin", "student"),
   downloadCertificate,
+);
+
+router.get(
+  "/student/:studentId",
+  protect,
+  authorize("admin"),
+  getStudentCertificates
 );
 
 module.exports = router;

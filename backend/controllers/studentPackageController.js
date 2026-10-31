@@ -75,4 +75,43 @@ const assignPackage = async (req, res) => {
   }
 };
 
-module.exports = { assignPackage };
+
+const getStudentPackages = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+
+    const student = await Student.findOne({ studentId });
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: "Student not found",
+      });
+    }
+
+    const packages = await StudentPackage.find({
+      student: student._id,
+    })
+      .populate("course", "packageName danceStyle durationMonths totalFees")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: packages.length,
+      packages,
+    });
+  } catch (error) {
+    console.error("Student Package History Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch student packages",
+    });
+  }
+};
+
+
+module.exports = {
+  assignPackage,
+  getStudentPackages,
+};

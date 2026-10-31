@@ -6,64 +6,64 @@ const studentPackageSchema = new mongoose.Schema(
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
-      required: true
+      required: true,
     },
 
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Course",
-      required: true
+      required: true,
     },
 
     packageName: {
       type: String,
-      required: true
+      required: true,
     },
 
     danceStyle: {
       type: String,
-      required: true
+      required: true,
     },
 
     durationMonths: {
       type: Number,
       enum: [1, 3, 6],
-      required: true
+      required: true,
     },
 
     totalFees: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
 
     startDate: {
       type: Date,
-      default: null
+      default: null,
     },
 
     expiryDate: {
       type: Date,
-      default: null
+      default: null,
     },
 
     paymentStatus: {
       type: String,
       enum: ["unpaid", "paid"],
-      default: "unpaid"
+      default: "unpaid",
     },
 
     status: {
       type: String,
       enum: ["pending", "active", "expired"],
-      default: "pending"
+      default: "pending",
     },
 
     assignedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
-    }
+      required: true,
+    },
   },
   { timestamps: true }
 );
