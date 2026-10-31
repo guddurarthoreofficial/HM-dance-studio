@@ -1,51 +1,81 @@
-import User from '../models/User.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
-export const login = async (req, res) => {
-  const { username, password } = req.body;
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+
+// Generate JWT
+const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user._id,
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+};
+
+// Login Admin / Student
+const login = async (req, res) => {
   try {
-    const user = await User.findOne({ username });
-    if (!user) return res.status(404).json({ msg: 'User not found' });
+    const { email, password } = req.body;
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required"
+      });
+    }
 
-    const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1d' }
-    );
+    const user = await User.findOne({
+      email: email.toLowerCase().trim()
+    }).select("+password");
 
-    res
-      .cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 24 * 60 * 60 * 1000,
-      })
-      .json({ msg: 'Login successful', role: user.role });
-  } catch (err) {
-    res.status(500).json({ msg: 'Server error' });
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: "Your account is blocked. Contact the administrator."
+      });
+    }
+
+    const isMatch = await user.comparePassword(password);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password"
+      });
+    }
+
+    const token = generateToken(user);
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        studentId: user.studentId || null,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error during login"
+    });
   }
 };
 
-export const register = async (req, res) => {
-  const { username, password, role } = req.body;
-  try {
-    const userExists = await User.findOne({ username });
-    if (userExists) return res.status(400).json({ msg: 'User already exists' });
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, password: hashedPassword, role });
-    await newUser.save();
-
-    res.status(201).json({ msg: 'User registered successfully' });
-  } catch (err) {
-    res.status(500).json({ msg: 'Server error' });
-  }
-};
-
-export const logout = (req, res) => {
-  res.clearCookie('token').json({ msg: 'Logged out successfully' });
-};
+module.exports = { login };
