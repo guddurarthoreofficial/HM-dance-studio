@@ -78,4 +78,78 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { login };
+
+
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All password fields are required"
+      });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "New password must be at least 8 characters"
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New password and confirm password do not match"
+      });
+    }
+
+    if (currentPassword === newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New password must be different from current password"
+      });
+    }
+
+    const user = await User.findById(req.user._id).select("+password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User account not found"
+      });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Current password is incorrect"
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Password changed successfully. Please log in again."
+    });
+
+  } catch (error) {
+    console.error("Change Password Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to change password"
+    });
+  }
+};
+
+
+module.exports = {
+  login,
+  changePassword
+};

@@ -2,10 +2,14 @@
 const express = require("express");
 const router = express.Router();
 
-const { login } = require("../controllers/authController");
+const {
+  login,
+  changePassword
+} = require("../controllers/authController");
+
 const { protect } = require("../middleware/authMiddleware");
 
-// Login
+// Login Admin / Student
 router.post("/login", login);
 
 // Get logged-in user
@@ -21,5 +25,8 @@ router.get("/me", protect, (req, res) => {
     }
   });
 });
+
+// Change Password
+router.put("/change-password", protect, changePassword);
 
 module.exports = router;
