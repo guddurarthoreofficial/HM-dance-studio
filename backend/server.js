@@ -11,6 +11,8 @@ const studentPackageRoutes = require("./routes/studentPackageRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
 
+const dashboardRoutes = require("./routes/dashboardRoutes");
+
 
 
 const app = express();
@@ -32,6 +34,7 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/student-packages", studentPackageRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/certificates", certificateRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Health check
 app.get("/", (req, res) => {
