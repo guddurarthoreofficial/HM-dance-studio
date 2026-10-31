@@ -1,8 +1,11 @@
 
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 
 const Students = () => {
+  const navigate = useNavigate();
+
   const [students, setStudents] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -19,7 +22,6 @@ const Students = () => {
         : "/students";
 
       const response = await api.get(endpoint);
-
       setStudents(response.data.students || []);
     } catch (err) {
       setError(
@@ -39,13 +41,14 @@ const Students = () => {
     fetchStudents(search);
   };
 
+
   const handleStatusChange = async (student) => {
-    const isActive = student.user?.isActive === false
-      ? true
-      : false;
+    const currentlyActive = student.user?.isActive !== false;
+    const nextStatus = !currentlyActive;
 
     const confirmed = window.confirm(
-      `Are you sure you want to ${isActive ? "unblock" : "block"} ${student.name}?`
+      `Are you sure you want to ${nextStatus ? "unblock" : "block"
+      } ${student.name}?`
     );
 
     if (!confirmed) return;
@@ -54,22 +57,23 @@ const Students = () => {
       setUpdatingId(student._id);
 
       await api.patch(`/students/${student.studentId}/status`, {
-        isActive,
+        isActive: nextStatus,
       });
 
       await fetchStudents(search);
     } catch (err) {
       alert(
-        err.response?.data?.message || "Unable to update student status."
+        err.response?.data?.message ||
+        "Unable to update student status."
       );
     } finally {
       setUpdatingId(null);
     }
   };
 
+
   return (
     <div className="space-y-6">
-
       {/* Heading */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -165,7 +169,7 @@ const Students = () => {
                   <th className="px-5 py-4">Phone</th>
                   <th className="px-5 py-4">Admission Date</th>
                   <th className="px-5 py-4">Status</th>
-                  <th className="px-5 py-4">Action</th>
+                  <th className="px-5 py-4">Actions</th>
                 </tr>
               </thead>
 
@@ -198,32 +202,41 @@ const Students = () => {
 
                       <td className="px-5 py-4">
                         <span
-                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                            active
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${active
                               ? "bg-green-100 text-green-700"
                               : "bg-red-100 text-red-700"
-                          }`}
+                            }`}
                         >
                           {active ? "Active" : "Blocked"}
                         </span>
                       </td>
 
                       <td className="px-5 py-4">
-                        <button
-                          disabled={updatingId === student._id}
-                          onClick={() => handleStatusChange(student)}
-                          className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold disabled:opacity-50 ${
-                            active
-                              ? "bg-red-50 text-red-700 hover:bg-red-100"
-                              : "bg-green-50 text-green-700 hover:bg-green-100"
-                          }`}
-                        >
-                          {updatingId === student._id
-                            ? "Updating..."
-                            : active
-                              ? "Block"
-                              : "Unblock"}
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() =>
+                              navigate(`/admin/students/${student.studentId}`)
+                            }
+                            className="whitespace-nowrap rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-100"
+                          >
+                            View Details
+                          </button>
+
+                          <button
+                            disabled={updatingId === student._id}
+                            onClick={() => handleStatusChange(student)}
+                            className={`whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold disabled:opacity-50 ${active
+                                ? "bg-red-50 text-red-700 hover:bg-red-100"
+                                : "bg-green-50 text-green-700 hover:bg-green-100"
+                              }`}
+                          >
+                            {updatingId === student._id
+                              ? "Updating..."
+                              : active
+                                ? "Block"
+                                : "Unblock"}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

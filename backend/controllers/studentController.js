@@ -198,6 +198,7 @@ const getAllStudents = async (req, res) => {
   }
 };
 
+
 const searchStudents = async (req, res) => {
   try {
     const { search } = req.query;
@@ -219,6 +220,8 @@ const searchStudents = async (req, res) => {
       ],
     })
       .select("-aadhaarNumber")
+      .populate("user", "isActive")
+      .sort({ createdAt: -1 })
       .limit(20);
 
     return res.status(200).json({
@@ -235,6 +238,7 @@ const searchStudents = async (req, res) => {
     });
   }
 };
+
 
 const updateStudent = async (req, res) => {
   try {

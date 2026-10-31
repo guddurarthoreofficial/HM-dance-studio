@@ -24,6 +24,8 @@ import StudentLayout from "./layouts/StudentLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import StudentDashboard from "./pages/student/Dashboard";
 import Students from "./pages/admin/Students";
+import StudentDetails from "./pages/admin/StudentDetails";
+
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -107,6 +109,10 @@ function AppRoutes() {
             />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="students" element={<Students />} />
+            <Route
+              path="students/:studentId"
+              element={<StudentDetails />}
+            />
           </Route>
         </Route>
 
