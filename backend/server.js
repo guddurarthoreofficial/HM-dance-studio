@@ -13,28 +13,36 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const certificateRoutes = require("./routes/certificateRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
+
+const registrationRoutes = require("./routes/registrationRoutes");
+
 const app = express();
 
 // Allowed frontend origins
-const allowedOrigins = (process.env.CLIENT_URL || "")
-  .split(",")
-  .map((url) => url.trim())
-  .filter(Boolean);
 
-// CORS Configuration
+// Allowed frontend origins
+const allowedOrigins = [
+  "https://hmdance.shiulitech.in",
+  "https://hm-dance-studio.vercel.app",
+];
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests without an Origin (e.g. Postman/server-to-server)
       if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      return callback(new Error(`CORS blocked for origin: ${origin}`));
+      console.log("Blocked CORS Origin:", origin);
+      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -47,6 +55,9 @@ app.use("/api/student-packages", studentPackageRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/certificates", certificateRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
+
+app.use("/api/registrations", registrationRoutes);
 
 // Health Check
 app.get("/", (req, res) => {
