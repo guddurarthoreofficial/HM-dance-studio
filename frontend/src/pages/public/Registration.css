@@ -1,0 +1,339 @@
+
+.hm-registration-page {
+  min-height: 100vh;
+  padding: 130px 20px 90px;
+  background: #0b0b0b;
+  color: #f5f1e8;
+}
+
+.hm-registration-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hm-registration-heading {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 45px;
+}
+
+.hm-registration-kicker {
+  color: #c8a66a;
+  letter-spacing: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.hm-registration-heading h1 {
+  font-size: clamp(36px, 6vw, 58px);
+  margin: 18px 0;
+  font-weight: 600;
+}
+
+.hm-registration-heading h1 em {
+  color: #c8a66a;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+
+.hm-registration-heading p {
+  color: #aaa49a;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.hm-registration-form {
+  background: #131313;
+  border: 1px solid #29251e;
+  padding: 35px;
+  border-radius: 8px;
+}
+
+.hm-registration-section {
+  margin-bottom: 38px;
+}
+
+.hm-registration-section h2 {
+  font-size: 20px;
+  font-weight: 500;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #302a20;
+  color: #d7b77b;
+}
+
+.hm-registration-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.hm-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.hm-form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.hm-form-group label {
+  color: #d8d2c8;
+  font-size: 13px;
+}
+
+.hm-form-group input,
+.hm-form-group select,
+.hm-form-group textarea {
+  width: 100%;
+  background: #0c0c0c;
+  border: 1px solid #38332a;
+  border-radius: 4px;
+  padding: 14px 15px;
+  color: #f5f1e8;
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.hm-form-group input:focus,
+.hm-form-group select:focus,
+.hm-form-group textarea:focus {
+  border-color: #c8a66a;
+}
+
+.hm-form-group input::placeholder,
+.hm-form-group textarea::placeholder {
+  color: #716d66;
+}
+
+.hm-form-group select option {
+  background: #131313;
+}
+
+.hm-form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.hm-registration-submit {
+  border-top: 1px solid #302a20;
+  padding-top: 25px;
+  text-align: center;
+}
+
+.hm-registration-submit p {
+  color: #99938a;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+.hm-registration-submit button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 350px;
+  padding: 16px 24px;
+  background: #c8a66a;
+  border: 1px solid #c8a66a;
+  color: #111;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.hm-registration-submit button:hover {
+  background: transparent;
+  color: #c8a66a;
+}
+
+.hm-registration-submit button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hm-registration-submit button span {
+  font-size: 18px;
+}
+
+.hm-registration-back {
+  display: block;
+  width: fit-content;
+  margin: 22px auto 0;
+  color: #c8a66a;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+/* Error Alert */
+
+.hm-registration-alert {
+  padding: 16px 20px;
+  border-radius: 5px;
+  margin-bottom: 22px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.hm-registration-alert p {
+  margin-top: 5px;
+}
+
+.hm-registration-alert.error {
+  background: #2b1717;
+  border: 1px solid #693737;
+  color: #f0aaaa;
+}
+
+/* Success Modal */
+
+.hm-success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(9px);
+  animation: hmFadeIn 0.25s ease;
+}
+
+.hm-success-modal {
+  width: 100%;
+  max-width: 440px;
+  padding: 42px 30px;
+  text-align: center;
+  background: #151515;
+  border: 1px solid #51432b;
+  border-radius: 10px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.55);
+  animation: hmModalIn 0.3s ease;
+}
+
+.hm-success-icon {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 25px;
+}
+
+.hm-success-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #c8a66a;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hm-success-label {
+  color: #c8a66a;
+  font-size: 11px;
+  letter-spacing: 3px;
+  font-weight: 700;
+}
+
+.hm-success-modal h2 {
+  margin: 15px 0;
+  color: #f5f1e8;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.hm-success-modal h2 em {
+  color: #c8a66a;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+
+.hm-success-modal p {
+  color: #aaa49a;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.hm-success-modal button {
+  width: 100%;
+  padding: 15px;
+  background: #c8a66a;
+  border: 1px solid #c8a66a;
+  color: #111;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.hm-success-modal button:hover {
+  background: transparent;
+  color: #c8a66a;
+}
+
+.hm-success-modal button span {
+  margin-left: 10px;
+}
+
+/* Animations */
+
+@keyframes hmFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hmModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+  .hm-registration-page {
+    padding: 105px 14px 55px;
+  }
+
+  .hm-registration-form {
+    padding: 22px 16px;
+  }
+
+  .hm-registration-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .hm-form-group.full-width {
+    grid-column: auto;
+  }
+
+  .hm-registration-heading {
+    margin-bottom: 30px;
+  }
+
+  .hm-success-modal {
+    padding: 35px 22px;
+  }
+
+  .hm-success-modal h2 {
+    font-size: 26px;
+  }
+}

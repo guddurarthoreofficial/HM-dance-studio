@@ -8,6 +8,7 @@ import {
   Routes,
   useLocation,
   Navigate,
+  Outlet,
 } from "react-router-dom";
 
 import Navbar from "./components/layout/Navbar";
@@ -15,6 +16,7 @@ import Footer from "./components/layout/Footer";
 
 import Home from "./pages/Home";
 import StudioPage from "./pages/StudioPage";
+import Registration from "./pages/public/Registration";
 
 import Login from "./pages/auth/Login";
 
@@ -29,7 +31,6 @@ import Courses from "./pages/admin/Courses";
 import Packages from "./pages/admin/Packages";
 import Payments from "./pages/admin/Payments";
 
-
 import StudentDashboard from "./pages/student/Dashboard";
 import StudentProfile from "./pages/student/Profile";
 import StudentSettings from "./pages/student/Settings";
@@ -41,16 +42,35 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 
 import "./styles/Site.css";
 
+// Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
   }, [pathname]);
 
   return null;
 }
 
+// Public Website Layout
+function PublicLayout() {
+  return (
+    <>
+      <Navbar />
+
+      <Outlet />
+
+      <Footer />
+    </>
+  );
+}
+
+// 404 Page
 function NotFound() {
   return (
     <main className="hm-page">
@@ -77,37 +97,56 @@ function NotFound() {
   );
 }
 
-function PublicLayout() {
-  return (
-    <>
-      <Navbar />
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<StudioPage page="about" />} />
-        <Route path="/programs" element={<StudioPage page="programs" />} />
-        <Route path="/achievements" element={<StudioPage page="achievements" />} />
-        <Route path="/gallery" element={<StudioPage page="gallery" />} />
-        <Route path="/videos" element={<StudioPage page="videos" />} />
-        <Route path="/contact" element={<StudioPage page="contact" />} />
-      </Routes>
-
-      <Footer />
-    </>
-  );
-}
-
+// Application Routes
 function AppRoutes() {
   return (
     <>
       <ScrollToTop />
 
       <Routes>
+
         {/* Public Website */}
-        <Route path="/" element={<PublicLayout />}>
-          <Route index element={<Home />} />
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+
+          <Route
+            path="/about"
+            element={<StudioPage page="about" />}
+          />
+
+          <Route
+            path="/programs"
+            element={<StudioPage page="programs" />}
+          />
+
+          <Route
+            path="/achievements"
+            element={<StudioPage page="achievements" />}
+          />
+
+          <Route
+            path="/gallery"
+            element={<StudioPage page="gallery" />}
+          />
+
+          <Route
+            path="/videos"
+            element={<StudioPage page="videos" />}
+          />
+
+          <Route
+            path="/contact"
+            element={<StudioPage page="contact" />}
+          />
+
+          {/* Public Registration */}
+          <Route
+            path="/register"
+            element={<Registration />}
+          />
         </Route>
 
+        {/* Login */}
         <Route path="/login" element={<Login />} />
 
         {/* Admin Routes */}
@@ -117,16 +156,41 @@ function AppRoutes() {
               index
               element={<Navigate to="dashboard" replace />}
             />
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="students" element={<Students />} />
+
+            <Route
+              path="dashboard"
+              element={<AdminDashboard />}
+            />
+
+            <Route
+              path="students"
+              element={<Students />}
+            />
+
             <Route
               path="students/:studentId"
               element={<StudentDetails />}
             />
-            <Route path="admissions" element={<Admissions />} />
-            <Route path="courses" element={<Courses />} />
-            <Route path="packages" element={<Packages />} />
-            <Route path="payments" element={<Payments />} />
+
+            <Route
+              path="admissions"
+              element={<Admissions />}
+            />
+
+            <Route
+              path="courses"
+              element={<Courses />}
+            />
+
+            <Route
+              path="packages"
+              element={<Packages />}
+            />
+
+            <Route
+              path="payments"
+              element={<Payments />}
+            />
           </Route>
         </Route>
 
@@ -137,11 +201,32 @@ function AppRoutes() {
               index
               element={<Navigate to="dashboard" replace />}
             />
-            <Route path="dashboard" element={<StudentDashboard />} />
-            <Route path="profile" element={<StudentProfile />} />
-            <Route path="settings" element={<StudentSettings />} />
-            <Route path="packages" element={<StudentPackages />} />
-            <Route path="payments" element={<StudentPayments />} />
+
+            <Route
+              path="dashboard"
+              element={<StudentDashboard />}
+            />
+
+            <Route
+              path="profile"
+              element={<StudentProfile />}
+            />
+
+            <Route
+              path="settings"
+              element={<StudentSettings />}
+            />
+
+            <Route
+              path="packages"
+              element={<StudentPackages />}
+            />
+
+            <Route
+              path="payments"
+              element={<StudentPayments />}
+            />
+
             <Route
               path="certificates"
               element={<StudentCertificates />}
@@ -149,20 +234,15 @@ function AppRoutes() {
           </Route>
         </Route>
 
-        {/* Existing Public Pages */}
-        <Route path="/about" element={<><Navbar /><StudioPage page="about" /><Footer /></>} />
-        <Route path="/programs" element={<><Navbar /><StudioPage page="programs" /><Footer /></>} />
-        <Route path="/achievements" element={<><Navbar /><StudioPage page="achievements" /><Footer /></>} />
-        <Route path="/gallery" element={<><Navbar /><StudioPage page="gallery" /><Footer /></>} />
-        <Route path="/videos" element={<><Navbar /><StudioPage page="videos" /><Footer /></>} />
-        <Route path="/contact" element={<><Navbar /><StudioPage page="contact" /><Footer /></>} />
-
+        {/* 404 */}
         <Route path="*" element={<NotFound />} />
+
       </Routes>
     </>
   );
 }
 
+// Main App
 export default function App() {
   return (
     <BrowserRouter>

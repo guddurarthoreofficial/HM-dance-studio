@@ -24,6 +24,7 @@ const app = express();
 const allowedOrigins = [
   "https://hmdance.shiulitech.in",
   "https://hm-dance-studio.vercel.app",
+  "http://localhost:5173",
 ];
 
 app.use(

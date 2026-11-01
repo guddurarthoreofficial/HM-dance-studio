@@ -15,9 +15,6 @@ const links = [
   { label: "Contact", to: "/contact" },
 ];
 
-const REGISTER_URL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdh3O9bcm18y7ZiPqCA7fYanD7jKLHdoNc9EMPKrKGqaHiHFw/viewform?usp=header";
-
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -143,15 +140,14 @@ export default function Navbar() {
             Student / Admin Login <span>→</span>
           </Link>
 
-          <a
-            href={REGISTER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Mobile Registration */}
+          <Link
+            to="/register"
             className="hm-nav__mobile-join"
             onClick={closeMenu}
           >
             Book your trial class <span>↗</span>
-          </a>
+          </Link>
 
           <span className="hm-nav__mobile-note">
             Where passion becomes performance.
@@ -164,18 +160,21 @@ export default function Navbar() {
           Login
         </Link>
 
-        <a
-          href={REGISTER_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Desktop Registration */}
+        <Link
+          to="/register"
           className="hm-nav__join"
         >
-          <span className="hm-nav__join-label">START YOUR JOURNEY</span>
-          <span className="hm-nav__join-text">Join the Studio</span>
+          <span className="hm-nav__join-label">
+            START YOUR JOURNEY
+          </span>
+          <span className="hm-nav__join-text">
+            Join the Studio
+          </span>
           <span className="hm-nav__join-arrow" aria-hidden="true">
             ↗
           </span>
-        </a>
+        </Link>
 
         <button
           type="button"
