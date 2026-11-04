@@ -4,9 +4,6 @@ const Counter = require("../models/Counter");
 
 const transporter = require("../config/mailer");
 
-
-
-
 const createStudent = async (req, res) => {
   let createdUser;
   let createdStudent;
@@ -71,6 +68,9 @@ const createStudent = async (req, res) => {
 
     const normalizedEmail = email.trim().toLowerCase();
 
+    // Student portal login URL
+    const portalLoginUrl = "https://hmdance.shiulitech.in/login";
+
     const existingUser = await User.findOne({
       email: normalizedEmail,
     });
@@ -88,15 +88,16 @@ const createStudent = async (req, res) => {
     const counter = await Counter.findOneAndUpdate(
       { name: `student-${year}` },
       { $inc: { sequence: 1 } },
-      { new: true, upsert: true }
+      { new: true, upsert: true },
     );
 
-    const studentId = `HMDS-${year}-${String(
-      counter.sequence
-    ).padStart(4, "0")}`;
+    const studentId = `HMDS-${year}-${String(counter.sequence).padStart(
+      4,
+      "0",
+    )}`;
 
     // Create login account
-    // User model should hash password using its existing bcrypt pre-save hook.
+    // Existing User model bcrypt pre-save hook hashes the password.
     createdUser = await User.create({
       name: name.trim(),
       email: normalizedEmail,
@@ -124,7 +125,7 @@ const createStudent = async (req, res) => {
       admissionDate: new Date(),
     });
 
-    // Send login credentials to student's email
+    // Send login credentials and portal link to student's email
     let emailSent = false;
     let emailError = null;
 
@@ -133,6 +134,7 @@ const createStudent = async (req, res) => {
         from: `"HM Dance Studio" <${process.env.SMTP_USER}>`,
         to: normalizedEmail,
         subject: "Welcome to HM Dance Studio - Your Login Credentials",
+
         text: `
 Hello ${name},
 
@@ -146,6 +148,9 @@ Student ID: ${studentId}
 Login Email: ${normalizedEmail}
 Temporary Password: ${password}
 
+Student Portal Login:
+${portalLoginUrl}
+
 Please log in using these credentials and change your password after your first login.
 
 Keep your login credentials confidential.
@@ -153,22 +158,77 @@ Keep your login credentials confidential.
 Regards,
 HM Dance Studio
         `,
+
         html: `
           <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:25px;border:1px solid #eee;border-radius:12px;color:#222">
-            <h2 style="color:#6d28d9">Welcome to HM Dance Studio!</h2>
+
+            <h2 style="color:#6d28d9">
+              Welcome to HM Dance Studio!
+            </h2>
+
             <p>Hello <strong>${name}</strong>,</p>
-            <p>Your admission has been successfully completed.</p>
+
+            <p>
+              Congratulations! Your admission has been successfully completed.
+            </p>
+
             <p>Here are your student login credentials:</p>
 
             <div style="background:#f5f3ff;padding:18px;border-radius:8px">
-              <p><strong>Student ID:</strong> ${studentId}</p>
-              <p><strong>Login Email:</strong> ${normalizedEmail}</p>
-              <p><strong>Temporary Password:</strong> ${password}</p>
+              <p>
+                <strong>Student ID:</strong> ${studentId}
+              </p>
+
+              <p>
+                <strong>Login Email:</strong> ${normalizedEmail}
+              </p>
+
+              <p>
+                <strong>Temporary Password:</strong> ${password}
+              </p>
             </div>
 
-            <p>Please log in and change your password after your first login.</p>
-            <p>Keep your login credentials confidential.</p>
-            <p>Regards,<br/><strong>HM Dance Studio</strong></p>
+            <div style="margin-top:25px;padding:18px;background:#fafafa;border:1px solid #eee;border-radius:8px">
+
+              <h3 style="margin-top:0;color:#6d28d9">
+                Student Portal Login
+              </h3>
+
+              <p>
+                Access your student dashboard using the button below:
+              </p>
+
+              <a
+                href="${portalLoginUrl}"
+                target="_blank"
+                style="display:inline-block;background:#6d28d9;color:#ffffff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold"
+              >
+                Login to Student Portal
+              </a>
+
+              <p style="font-size:13px;color:#666;margin-top:15px">
+                Or copy this link into your browser:
+                <br/>
+                <a href="${portalLoginUrl}" style="color:#6d28d9">
+                  ${portalLoginUrl}
+                </a>
+              </p>
+
+            </div>
+
+            <p style="margin-top:20px">
+              Please log in and change your password after your first login.
+            </p>
+
+            <p>
+              Keep your login credentials confidential.
+            </p>
+
+            <p>
+              Regards,<br/>
+              <strong>HM Dance Studio</strong>
+            </p>
+
           </div>
         `,
       });
@@ -176,7 +236,8 @@ HM Dance Studio
       emailSent = true;
     } catch (mailError) {
       console.error("Admission Email Error:", mailError.message);
-      emailError = "Admission created, but credentials email could not be sent.";
+      emailError =
+        "Admission created, but credentials email could not be sent.";
     }
 
     return res.status(201).json({
@@ -212,9 +273,6 @@ HM Dance Studio
     });
   }
 };
-
-
-
 
 const getMyProfile = async (req, res) => {
   try {
@@ -278,7 +336,6 @@ const getAllStudents = async (req, res) => {
   }
 };
 
-
 const searchStudents = async (req, res) => {
   try {
     const { search } = req.query;
@@ -318,7 +375,6 @@ const searchStudents = async (req, res) => {
     });
   }
 };
-
 
 const updateStudent = async (req, res) => {
   try {
@@ -360,10 +416,7 @@ const updateStudent = async (req, res) => {
     }
 
     // Validate Aadhaar
-    if (
-      updates.aadhaarNumber &&
-      !/^\d{12}$/.test(updates.aadhaarNumber)
-    ) {
+    if (updates.aadhaarNumber && !/^\d{12}$/.test(updates.aadhaarNumber)) {
       return res.status(400).json({
         success: false,
         message: "Invalid Aadhaar number",
@@ -378,10 +431,7 @@ const updateStudent = async (req, res) => {
       });
     }
 
-    if (
-      updates.parentPhone &&
-      !/^\d{10}$/.test(updates.parentPhone)
-    ) {
+    if (updates.parentPhone && !/^\d{10}$/.test(updates.parentPhone)) {
       return res.status(400).json({
         success: false,
         message: "Invalid parent mobile number",

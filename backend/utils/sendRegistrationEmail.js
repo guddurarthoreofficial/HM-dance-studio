@@ -16,7 +16,7 @@ const sendRegistrationEmail = async (registration) => {
         <p>Dear ${registration.studentName},</p>
         <p>Thank you for registering with HM Dance Studio.</p>
         <p>We have successfully received your registration details. Our team will review your application and contact you soon.</p>
-        <p><strong>Registration Status:</strong> Pending Review</p>
+        <p><strong>Registration Status:</strong> Data Received</p>
         <p>Regards,<br/>HM Dance Studio Team</p>
       </div>
     `,
