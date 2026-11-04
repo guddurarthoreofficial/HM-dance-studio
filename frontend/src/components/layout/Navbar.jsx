@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
 
 const LOGO = "../../images/logo.png";
@@ -18,7 +19,22 @@ const links = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
   const location = useLocation();
+
+  // Authentication state
+  const { user, isAuthenticated, loading } = useAuth();
+
+  // Dashboard details according to role
+  const dashboardPath =
+    user?.role === "admin"
+      ? "/admin/dashboard"
+      : "/student/dashboard";
+
+  const dashboardLabel =
+    user?.role === "admin"
+      ? "Admin Dashboard"
+      : "My Dashboard";
 
   useEffect(() => {
     setMenuOpen(false);
@@ -35,11 +51,13 @@ export default function Navbar() {
 
   useEffect(() => {
     const query = window.matchMedia("(min-width: 901px)");
+
     const handleChange = (event) => {
       if (event.matches) setMenuOpen(false);
     };
 
     query.addEventListener("change", handleChange);
+
     return () => query.removeEventListener("change", handleChange);
   }, []);
 
@@ -51,6 +69,7 @@ export default function Navbar() {
     };
 
     const previousOverflow = document.body.style.overflow;
+
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleEscape);
 
@@ -61,6 +80,11 @@ export default function Navbar() {
   }, [menuOpen]);
 
   const closeMenu = () => setMenuOpen(false);
+
+  // Authentication button destination
+  const authPath = isAuthenticated ? dashboardPath : "/login";
+
+  const authLabel = isAuthenticated ? dashboardLabel : "Login";
 
   return (
     <header
@@ -81,6 +105,7 @@ export default function Navbar() {
       />
 
       <div className="hm-nav__inner">
+        {/* Brand */}
         <Link
           to="/"
           className="hm-nav__brand"
@@ -95,15 +120,19 @@ export default function Navbar() {
             <span className="hm-nav__brand-overline">
               WHERE PASSION MEETS ART
             </span>
+
             <strong>
               HM <span>Dance Studio</span>
             </strong>
           </span>
         </Link>
 
+        {/* Navigation */}
         <nav
           id="hm-navigation-links"
-          className={`hm-nav__links ${menuOpen ? "hm-nav__links--open" : ""}`}
+          className={`hm-nav__links ${
+            menuOpen ? "hm-nav__links--open" : ""
+          }`}
           aria-label="Main navigation"
         >
           <span className="hm-nav__mobile-heading">
@@ -124,21 +153,26 @@ export default function Navbar() {
               <span className="hm-nav__link-number">
                 {String(index + 1).padStart(2, "0")}
               </span>
+
               <span>{link.label}</span>
+
               <span className="hm-nav__link-arrow" aria-hidden="true">
                 ↗
               </span>
             </NavLink>
           ))}
 
-          {/* Mobile Login */}
-          <Link
-            to="/login"
-            className="hm-nav__mobile-login"
-            onClick={closeMenu}
-          >
-            Student / Admin Login <span>→</span>
-          </Link>
+          {/* Mobile Login / Dashboard */}
+          {!loading && (
+            <Link
+              to={authPath}
+              className="hm-nav__mobile-login"
+              onClick={closeMenu}
+            >
+              {authLabel}
+              <span>→</span>
+            </Link>
+          )}
 
           {/* Mobile Registration */}
           <Link
@@ -154,11 +188,17 @@ export default function Navbar() {
           </span>
         </nav>
 
-        {/* Desktop Login */}
-        <Link to="/login" className="hm-nav__login">
-          <span className="hm-nav__login-icon">↗</span>
-          Login
-        </Link>
+        {/* Desktop Login / Dashboard */}
+        {!loading && (
+          <Link
+            to={authPath}
+            className="hm-nav__login"
+            title={authLabel}
+          >
+            <span className="hm-nav__login-icon">↗</span>
+            {authLabel}
+          </Link>
+        )}
 
         {/* Desktop Registration */}
         <Link
@@ -168,18 +208,25 @@ export default function Navbar() {
           <span className="hm-nav__join-label">
             START YOUR JOURNEY
           </span>
+
           <span className="hm-nav__join-text">
             Join the Studio
           </span>
+
           <span className="hm-nav__join-arrow" aria-hidden="true">
             ↗
           </span>
         </Link>
 
+        {/* Mobile Toggle */}
         <button
           type="button"
           className={`hm-nav__toggle ${menuOpen ? "is-open" : ""}`}
-          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-label={
+            menuOpen
+              ? "Close navigation menu"
+              : "Open navigation menu"
+          }
           aria-expanded={menuOpen}
           aria-controls="hm-navigation-links"
           onClick={() => setMenuOpen((open) => !open)}
